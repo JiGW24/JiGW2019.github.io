@@ -1,0 +1,97 @@
+<!DOCTYPE html><html><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>hexo＋next主题搭建GitHub blog干货教程 | JiGW‘s Blog</title><meta name="description" content="hexo＋next主题搭建GitHub blog干货教程"><meta name="keywords" content="hexo,blog"><meta name="author" content="Willis J"><meta name="copyright" content="Willis J"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="canonical" href="http://yoursite.com/2018/01/10/hexo/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="hexo＋next主题搭建GitHub blog干货教程"><meta name="twitter:description" content="hexo＋next主题搭建GitHub blog干货教程"><meta name="twitter:image" content="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png"><meta property="og:type" content="article"><meta property="og:title" content="hexo＋next主题搭建GitHub blog干货教程"><meta property="og:url" content="http://yoursite.com/2018/01/10/hexo/"><meta property="og:site_name" content="JiGW‘s Blog"><meta property="og:description" content="hexo＋next主题搭建GitHub blog干货教程"><meta property="og:image" content="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="prev" title="冒泡、插入、选择排序" href="http://yoursite.com/2018/03/03/排序1/"><link rel="next" title="出发永远是美好的一件事" href="http://yoursite.com/2018/01/07/出发/"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"cookieDomain":"https://jerryc.me/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight_copy: 'true',
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Bookmark',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days'
+
+  
+}</script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">1.1.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建仓库"><span class="toc-number">1.2.</span> <span class="toc-text">创建仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建博客根目录"><span class="toc-number">1.3.</span> <span class="toc-text">创建博客根目录</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正式工作"><span class="toc-number">2.</span> <span class="toc-text">正式工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#配置SSH-Key"><span class="toc-number">2.1.</span> <span class="toc-text">配置SSH Key</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置信息"><span class="toc-number">2.2.</span> <span class="toc-text">配置信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用hexo"><span class="toc-number">3.</span> <span class="toc-text">使用hexo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装hexo"><span class="toc-number">3.1.</span> <span class="toc-text">安装hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化hexo"><span class="toc-number">3.2.</span> <span class="toc-text">初始化hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新建文章"><span class="toc-number">3.3.</span> <span class="toc-text">新建文章</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#上传到GitHub"><span class="toc-number">3.4.</span> <span class="toc-text">上传到GitHub</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主题设置"><span class="toc-number">3.5.</span> <span class="toc-text">主题设置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#绑定个性域名"><span class="toc-number">4.</span> <span class="toc-text">绑定个性域名</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#申请域名"><span class="toc-number">4.1.</span> <span class="toc-text">申请域名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解析域名"><span class="toc-number">4.2.</span> <span class="toc-text">解析域名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署域名"><span class="toc-number">4.3.</span> <span class="toc-text">部署域名</span></a></li></ol></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/Photo/post.png)"><div id="page-header"><span class="pull-left"> <a class="blog_title" id="site-name" href="/">JiGW‘s Blog</a></span><div class="open toggle-menu pull-right"><div class="menu-icon-first"></div><div class="menu-icon-second"></div><div class="menu-icon-third"></div></div><span class="pull-right menus"><div class="mobile_author_icon"><img class="lozad" data-src="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png" onerror="onerror=null;src='/img/friend_404.gif'"><div class="mobile_author-info__description">春寒料峭  善自珍重</div></div><hr><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-coffee"></i><span> 留言</span></a><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a><script>document.body.addEventListener('touchstart', function(){ });</script></div></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title"><div class="posttitle">hexo＋next主题搭建GitHub blog干货教程</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2018-01-10<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> Updated 2019-04-26</time><span class="post-meta__separator mobile_hidden">|</span><span class="mobile_hidden"><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/HexoAndBlog/">HexoAndBlog</a></span></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本人开始并非使用next主题，这个大家可以去hexo官网<a href="https://hexo.io/themes/" target="_blank" rel="noopener">themes</a>处挑选自己喜欢的。<br>注意：点击主题预览图可以去预览下，点击主题名就可以去GitHub页面copy了。<br>但个人觉得next主题更好，bug少，拓展性强。好了，废话少说，进入正题。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
+<li>注册github账号</li>
+<li>安装node.js  </li>
+<li>链接：<a href="https://pan.baidu.com/s/1mji9SmO" target="_blank" rel="noopener">https://pan.baidu.com/s/1mji9SmO</a> 密码：fjw1</li>
+<li>安装git </li>
+<li>链接：<a href="https://pan.baidu.com/s/1dGUlqEH" target="_blank" rel="noopener">https://pan.baidu.com/s/1dGUlqEH</a> 密码：q9ws<br>我的电脑是Windows10，其他你根据我提供的百度云链接下载即可。安装git时全打勾。</li>
+</ul>
+<h2 id="创建仓库"><a href="#创建仓库" class="headerlink" title="创建仓库"></a>创建仓库</h2><p>新建一个 你的用户名.github.io的仓库，比如说你的GitHub用户名是abc,那么你新建仓库名叫abc.github.io,你的博客搭建好之后访问的网站也就是 <a href="https://abc.github.io了。" target="_blank" rel="noopener">https://abc.github.io了。</a></p>
+<p><img src="https://i.loli.net/2019/03/26/5c9a1bdf14b7a.png" alt></p>
+<p><img src="https://i.loli.net/2019/03/26/5c9a1be09c749.png" alt><br>那怎么删除仓库呢？？？<br>打开settings</p>
+<p><img src="https://i.loli.net/2019/03/26/5c9a1be6b70f2.png" alt></p>
+<p><img src="https://i.loli.net/2019/03/26/5c9a1be31d9a3.png" alt></p>
+<h2 id="创建博客根目录"><a href="#创建博客根目录" class="headerlink" title="创建博客根目录"></a>创建博客根目录</h2><p>在一个磁盘里创建一个文件夹，比如我，在D盘创建了一个blog文件夹。</p>
+<h1 id="正式工作"><a href="#正式工作" class="headerlink" title="正式工作"></a>正式工作</h1><h2 id="配置SSH-Key"><a href="#配置SSH-Key" class="headerlink" title="配置SSH Key"></a>配置SSH Key</h2><p>桌面右键打开git bash here,输入</p>
+<blockquote>
+<p> $ cd ~/. ssh // 检查本机已存在的 ssh 密钥</p>
+</blockquote>
+<p>再接着输入</p>
+<blockquote>
+<p>ssh-keygen -t rsa -C “你的邮件地址”</p>
+</blockquote>
+<p>然后连续按三次回车，会生成id_rsa.pub文件，用记事本打开它，然后全部复制即可，待会要用。这个文件的地址：C:\Users\Administrator.ssh<br>打开你的GitHub主页，打开设置-&gt;Deploy keys-&gt;Add deploy key.<br>这里名称随便取，在下面粘贴内容保存即可，有需要打勾就打勾。</p>
+<p>我们回来测试下是否把SSH配置成功了。<br>继续在bash里输入</p>
+<blockquote>
+<p>$ ssh -T <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a></p>
+</blockquote>
+<p>如果提示 Are you sure you want to continue connecting (yes/no)? ，输入yes，然后会看到 successfully authenticated,but github…..<br>看到这个意味着已成功！</p>
+<h2 id="配置信息"><a href="#配置信息" class="headerlink" title="配置信息"></a>配置信息</h2><blockquote>
+<p> $ git config –global user.name “xxx”// 你的github用户名，比如上面的abc<br>$ git config –global user.email  “<a href="mailto:xxx@qq.com" target="_blank" rel="noopener">xxx@qq.com</a>“// 填写你的github注册邮箱</p>
+</blockquote>
+<h1 id="使用hexo"><a href="#使用hexo" class="headerlink" title="使用hexo"></a>使用hexo</h1><h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><p>我们打开cmd命令行，输入</p>
+<blockquote>
+<p> npm install -g hexo</p>
+</blockquote>
+<p>这里可能会很慢，所以推荐使用淘宝镜像。</p>
+<blockquote>
+<p>安装：<code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code> </p>
+<p>验证是否安装成功使用：<code>cnpm -v</code><br>这里使用使用： <code>cnpm install -g hexo安装</code>hexo</p>
+<p>验证Hexo是否安装成功使用：<code>hexo -v</code> </p>
+</blockquote>
+<h2 id="初始化hexo"><a href="#初始化hexo" class="headerlink" title="初始化hexo"></a>初始化hexo</h2><p>打开我们之前创建的文件夹，比如我的blog，右击鼠标，打开git bash here,输入</p>
+<blockquote>
+<p>$ hexo init</p>
+</blockquote>
+<p>我们的文件夹会自动下载一些文件到这个blog目录里。</p>
+<p>继续输入</p>
+<blockquote>
+<p>$ hexo g<br>$ hexo s</p>
+</blockquote>
+<p>hexo s是指启动服务，成功打开后会有提示，登录localhost:4000即可看到初始页面，到这里你的blog就基本搭建好了。</p>
+<h2 id="新建文章"><a href="#新建文章" class="headerlink" title="新建文章"></a>新建文章</h2><p>在bash里输入</p>
+<blockquote>
+<p> $ hexo new post “文章名”</p>
+</blockquote>
+<p>然后去blog/source/_posts就可以看到</p>
+<h2 id="上传到GitHub"><a href="#上传到GitHub" class="headerlink" title="上传到GitHub"></a>上传到GitHub</h2><p>配置_config.yml中的deploy部分，注意这里的_config.yml文件是blog根目录，并非themes里的同名文件。<br>配置如下(xxx为你的GitHub名)</p>
+<blockquote>
+<p> deploy:<br>  type: git<br>  repository: <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:xxx/xxx.github.io.git<br>  branch: master</p>
+</blockquote>
+<p>再次注意：关于_config.yml文件的配置，冒号后一定要加个空格，否则就无法部署了。</p>
+<p>一切完成后在bash中继续输入</p>
+<blockquote>
+<p> npm install hexo-deployer-git –save #这里是安装插件，不然无法deploy</p>
+</blockquote>
+<p>然后输入以下就可以了</p>
+<blockquote>
+<p> hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</p>
+</blockquote>
+<p>成功后会提示：Deploy done：git  证明成功啦。这是打开你的xxx.github.io就可以看到网页啦！</p>
+<h2 id="主题设置"><a href="#主题设置" class="headerlink" title="主题设置"></a>主题设置</h2><p>打开<a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">next使用文档</a>有详细的教程。<br>主题教程以及拓展：<br><img src="https://i.imgur.com/lotL1do.png" alt></p>
+<h1 id="绑定个性域名"><a href="#绑定个性域名" class="headerlink" title="绑定个性域名"></a>绑定个性域名</h1><h2 id="申请域名"><a href="#申请域名" class="headerlink" title="申请域名"></a>申请域名</h2><p>在阿里云或腾讯云申请域名。我是在阿里云申请的，实名认证很快，推荐。</p>
+<h2 id="解析域名"><a href="#解析域名" class="headerlink" title="解析域名"></a>解析域名</h2><p>按我的内容来即可。<br><img src="https://i.loli.net/2019/03/26/5c9a1b95b0be7.png" alt></p>
+<h2 id="部署域名"><a href="#部署域名" class="headerlink" title="部署域名"></a>部署域名</h2><p>在blog根目录的source文件夹中新建无后缀文件 CNAME。里面内容只写上你的域名即可，注意不需要www<br>按之前的顺序deploy即可</p>
+<p>如果觉得有用，不如给个<a href="https://github.com/JiGuangwuu/JiGuangwuu.github.io" target="_blank" rel="noopener">Star Or Follow</a>，感谢。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Willis J</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2018/01/10/hexo/">http://yoursite.com/2018/01/10/hexo/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/hexo/">hexo    </a><a class="post-meta__tags" href="/tags/blog/">blog    </a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-buttom"><i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lozad post-qr-code__img" data-src="/img/wechat.jpg"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lozad post-qr-code__img" data-src="/img/alipay.jpg"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="prev-post pull-left"><a href="/2018/03/03/排序1/"><img class="prev_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Previous Post</div><div class="prev_info"><span>冒泡、插入、选择排序</span></div></a></div><div class="next-post pull-right"><a href="/2018/01/07/出发/"><img class="next_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>出发永远是美好的一件事</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/03/30/博客重配置/" title="更换电脑或重装系统时的博客配置"><img class="relatedPosts_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><div class="relatedPosts_title">更换电脑或重装系统时的博客配置</div></a></div><div class="relatedPosts_item"><a href="/2019/02/05/部署项目到github/" title="如何将本地项目部署到Github"><img class="relatedPosts_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><div class="relatedPosts_title">如何将本地项目部署到Github</div></a></div></div><div class="clear_both"></div></div></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2017 - 2019 By Willis J</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly"><span>Butterfly</span></a></div><div class="footer_custom_text">欢迎您呀</div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><section class="rightside" id="rightside"><i class="fa fa-book" id="readmode" title="Read Mode"> </i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion">簡</a><i class="fa fa-moon-o nightshift" id="nightshift" title="Dark Mode"></i></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script async src="/js/search/local-search.js"></script><script src="/js/nightshift.js"></script><script id="ribbon" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/js/piao.js"></script><script src="/js/tw_cn.js"></script><script>translateInitilization()
+
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@1.2.2/instantpage.min.js" type="module"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

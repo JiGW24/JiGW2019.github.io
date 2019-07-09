@@ -1,0 +1,109 @@
+<!DOCTYPE html><html><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>冒泡、插入、选择排序 | JiGW‘s Blog</title><meta name="description" content="冒泡、插入、选择排序"><meta name="keywords" content="sort"><meta name="author" content="Willis J"><meta name="copyright" content="Willis J"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="canonical" href="http://yoursite.com/2018/03/03/排序1/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="冒泡、插入、选择排序"><meta name="twitter:description" content="冒泡、插入、选择排序"><meta name="twitter:image" content="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png"><meta property="og:type" content="article"><meta property="og:title" content="冒泡、插入、选择排序"><meta property="og:url" content="http://yoursite.com/2018/03/03/排序1/"><meta property="og:site_name" content="JiGW‘s Blog"><meta property="og:description" content="冒泡、插入、选择排序"><meta property="og:image" content="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="prev" title="构造、静态代码块面试题" href="http://yoursite.com/2018/06/05/构造静态代码块/"><link rel="next" title="hexo＋next主题搭建GitHub blog干货教程" href="http://yoursite.com/2018/01/10/hexo/"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"cookieDomain":"https://jerryc.me/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight_copy: 'true',
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Bookmark',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days'
+
+  
+}</script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题的引入"><span class="toc-number">1.</span> <span class="toc-text">问题的引入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#从键盘输入10个整数并按从大到小的顺序排列，输出结果"><span class="toc-number">1.1.</span> <span class="toc-text">从键盘输入10个整数并按从大到小的顺序排列，输出结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#冒泡排序"><span class="toc-number">1.2.</span> <span class="toc-text">冒泡排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入排序"><span class="toc-number">1.3.</span> <span class="toc-text">插入排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择排序"><span class="toc-number">1.4.</span> <span class="toc-text">选择排序</span></a></li></ol></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/Photo/post.png)"><div id="page-header"><span class="pull-left"> <a class="blog_title" id="site-name" href="/">JiGW‘s Blog</a></span><div class="open toggle-menu pull-right"><div class="menu-icon-first"></div><div class="menu-icon-second"></div><div class="menu-icon-third"></div></div><span class="pull-right menus"><div class="mobile_author_icon"><img class="lozad" data-src="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png" onerror="onerror=null;src='/img/friend_404.gif'"><div class="mobile_author-info__description">春寒料峭  善自珍重</div></div><hr><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-coffee"></i><span> 留言</span></a><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a><script>document.body.addEventListener('touchstart', function(){ });</script></div></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title"><div class="posttitle">冒泡、插入、选择排序</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2018-03-03<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> Updated 2019-04-26</time><span class="post-meta__separator mobile_hidden">|</span><span class="mobile_hidden"><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/数据结构与算法/">数据结构与算法</a></span></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h1 id="问题的引入"><a href="#问题的引入" class="headerlink" title="问题的引入"></a>问题的引入</h1><h2 id="从键盘输入10个整数并按从大到小的顺序排列，输出结果"><a href="#从键盘输入10个整数并按从大到小的顺序排列，输出结果" class="headerlink" title="从键盘输入10个整数并按从大到小的顺序排列，输出结果"></a><em>从键盘输入10个整数并按从大到小的顺序排列，输出结果</em></h2><h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>基本思想：比较所有相邻的两个元素，如果第一个数比第二个数大就交换它们两个。最后的数字应该最大得到升序排列。</p>
+<p><img src="https://i.imgur.com/sTuENJp.png" alt></p>
+<pre><code>package top.jgw;
+import java.util.Arrays;
+import java.util.Scanner;
+public class BubbleSort {
+     public static void main(String[] args) {
+           Scanner ra = new Scanner(System.in);
+           System.out.print(&quot;请输入10个数：&quot;);
+           int[] arr = new int[10];
+           for(int a=0;a&lt;10;a++){
+            arr[a] = ra.nextInt(); 
+           }
+      System.out.println(&quot;排序前的arr：&quot;+Arrays.toString(arr));
+       for(int i=arr.length-1;i&gt;0;i--){
+        for(int j=1;j&lt;=i;j++){
+            if(arr[j-1]&gt;arr[j]){
+                 int temp = arr[j-1];
+                 arr[j-1] = arr[j];
+                 arr[j] = temp;
+              }
+        }
+  }
+  System.out.println(&quot;排序后的arr ：&quot;+Arrays.toString(arr));
+  }
+}</code></pre><p>结论：冒泡排序是一种稳定的排序方法。　</p>
+<ul>
+<li>若文件初状为正序，则一趟起泡就可完成排序，排序码的比较次数为n-1，且没有记录移动，时间复杂度是O(n)</li>
+<li>若文件初态为逆序，则需要n-1趟起泡，每趟进行n-i次排序码的比较，且每次比较都移动三次，比较和移动次数均达到最大值∶O(n2)</li>
+<li>起泡排序平均时间复杂度为O(n2)</li>
+</ul>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>基本思想：每一步将一个待排序的记录，按其顺序码大小插入到前面已经排序的序列的合适位置（从后向前找到合适位置后），直到全部插入排序完为止。</p>
+<p><img src="https://i.imgur.com/rrF3K6J.png" alt></p>
+<pre><code>package top.jgw;
+import java.util.Arrays;
+import java.util.Scanner;
+public class InsertionSort {
+    public static void main(String[] args){
+        int i,j;
+        int temp=0;
+        Scanner ra=new Scanner(System.in);
+        System.out.print(&quot;请输入10个数：&quot;);
+        int arr[]=new int[10];
+        for(int a=0;a&lt;10;a++){
+            arr[a]=ra.nextInt();
+        }
+    System.out.println(&quot;排序前的arr: &quot;+Arrays.toString(arr));
+    for(i=1;i&lt;arr.length;i++){
+        temp=arr[i];
+        for(j=i-1;j&gt;=0 &amp;&amp; temp&lt;arr[j];j--){
+            arr[j+1]=arr[j];
+        }
+            arr[j+1]=temp;
+
+        }
+    System.out.println(&quot;排序后的arr：&quot;+Arrays.toString(arr));
+    }
+}</code></pre><p>结论：直接插入排序也是稳定的排序。<br>文件初态不同时，直接插入排序所耗费的时间有很大差异。若文件初态为正序，则每个待插入的记录只需要比较一次就能够找到合适的位置插入，故算法的时间复杂度为O(n)，这时最好的情况。若初态为反序，则第i个待插入记录需要比较i+1次才能找到合适位置插入，故时间复杂度为O(n2)，这时最坏的情况。</p>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>基本思想：每一次排序都从待排序序列中选择一个最小元素放到已排好的序列的末端，重复此步骤可得到升序序列。</p>
+<p><img src="https://i.imgur.com/Cmkm5Do.png" alt></p>
+<pre><code>package top.jgw;
+import java.util.Arrays;
+import java.util.Scanner;
+public class SelectionSort {
+public static void main(String[] args){
+    Scanner ra=new Scanner(System.in);
+    System.out.print(&quot;请输入10个数: &quot;);
+    int arr[]=new int[10];
+    for(int a=0;a&lt;10;a++){
+        arr[a]=ra.nextInt();
+    }
+    System.out.println(&quot;排序前的arr: &quot;+Arrays.toString(arr));
+    int temp=0;
+    for(int i=0;i&lt;arr.length-1;i++){
+        for(int j=i+1;j&lt;arr.length;j++){
+            if(arr[i]&gt;arr[j]){
+                temp=arr[i];
+                arr[i]=arr[j];
+                arr[j]=temp;
+            }
+        }
+        }
+    System.out.println(&quot;排序后的arr: &quot;+Arrays.toString(arr));
+    }
+}</code></pre><p>结论：简单选择排序是不稳定的排序，时间复杂度：T(n)=O(n2)。</p>
+<p><em>日后补充…</em></p>
+<p>如果觉得有用，不如给个<a href="https://github.com/JiGuangwuu/JiGuangwuu.github.io" target="_blank" rel="noopener">Star Or Follow</a>，感谢。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Willis J</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2018/03/03/排序1/">http://yoursite.com/2018/03/03/排序1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/sort/">sort    </a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-buttom"><i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lozad post-qr-code__img" data-src="/img/wechat.jpg"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lozad post-qr-code__img" data-src="/img/alipay.jpg"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="prev-post pull-left"><a href="/2018/06/05/构造静态代码块/"><img class="prev_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Previous Post</div><div class="prev_info"><span>构造、静态代码块面试题</span></div></a></div><div class="next-post pull-right"><a href="/2018/01/10/hexo/"><img class="next_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>hexo＋next主题搭建GitHub blog干货教程</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"></div><div class="clear_both"></div></div></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2017 - 2019 By Willis J</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly"><span>Butterfly</span></a></div><div class="footer_custom_text">欢迎您呀</div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><section class="rightside" id="rightside"><i class="fa fa-book" id="readmode" title="Read Mode"> </i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion">簡</a><i class="fa fa-moon-o nightshift" id="nightshift" title="Dark Mode"></i></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script async src="/js/search/local-search.js"></script><script src="/js/nightshift.js"></script><script id="ribbon" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/js/piao.js"></script><script src="/js/tw_cn.js"></script><script>translateInitilization()
+
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@1.2.2/instantpage.min.js" type="module"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

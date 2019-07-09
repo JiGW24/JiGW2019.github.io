@@ -1,0 +1,199 @@
+<!DOCTYPE html><html><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Spring通过DataSource获取数据库数据(非注解方式和注解形式)及Spring集成Junit测试 | JiGW‘s Blog</title><meta name="description" content="Spring通过DataSource获取数据库数据(非注解方式和注解形式)及Spring集成Junit测试"><meta name="keywords" content="Spring,maven,druid,junit"><meta name="author" content="Willis J"><meta name="copyright" content="Willis J"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="canonical" href="http://yoursite.com/2019/05/27/Spring通过DataSource获取数据库数据/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Spring通过DataSource获取数据库数据(非注解方式和注解形式)及Spring集成Junit测试"><meta name="twitter:description" content="Spring通过DataSource获取数据库数据(非注解方式和注解形式)及Spring集成Junit测试"><meta name="twitter:image" content="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png"><meta property="og:type" content="article"><meta property="og:title" content="Spring通过DataSource获取数据库数据(非注解方式和注解形式)及Spring集成Junit测试"><meta property="og:url" content="http://yoursite.com/2019/05/27/Spring通过DataSource获取数据库数据/"><meta property="og:site_name" content="JiGW‘s Blog"><meta property="og:description" content="Spring通过DataSource获取数据库数据(非注解方式和注解形式)及Spring集成Junit测试"><meta property="og:image" content="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="prev" title="Spring注解" href="http://yoursite.com/2019/05/29/Spring注解/"><link rel="next" title="servlet域对象" href="http://yoursite.com/2019/05/05/servlet域对象/"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"cookieDomain":"https://jerryc.me/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight_copy: 'true',
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Bookmark',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days'
+
+  
+}</script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#非注解"><span class="toc-number">1.</span> <span class="toc-text">非注解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注解形式"><span class="toc-number">2.</span> <span class="toc-text">注解形式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集成Junit测试"><span class="toc-number">3.</span> <span class="toc-text">集成Junit测试</span></a></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/Photo/post.png)"><div id="page-header"><span class="pull-left"> <a class="blog_title" id="site-name" href="/">JiGW‘s Blog</a></span><div class="open toggle-menu pull-right"><div class="menu-icon-first"></div><div class="menu-icon-second"></div><div class="menu-icon-third"></div></div><span class="pull-right menus"><div class="mobile_author_icon"><img class="lozad" data-src="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png" onerror="onerror=null;src='/img/friend_404.gif'"><div class="mobile_author-info__description">春寒料峭  善自珍重</div></div><hr><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-coffee"></i><span> 留言</span></a><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a><script>document.body.addEventListener('touchstart', function(){ });</script></div></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title"><div class="posttitle">Spring通过DataSource获取数据库数据(非注解方式和注解形式)及Spring集成Junit测试</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2019-05-27<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> Updated 2019-05-27</time><span class="post-meta__separator mobile_hidden">|</span><span class="mobile_hidden"><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Spring/">Spring</a></span></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><h2 id="非注解"><a href="#非注解" class="headerlink" title="非注解"></a>非注解</h2><p>这里就不多说了，直接来源码</p>
+<p>1.导入各坐标<br>这里包括数据库连接池(druid/c3p0)，单元测试，数据库连接驱动坐标以及spring的依赖就不一一写出了</p>
+<pre><code>&lt;dependencies&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+  &lt;version&gt;5.0.5.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!--druid连接池--&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+  &lt;artifactId&gt;druid&lt;/artifactId&gt;
+  &lt;version&gt;1.1.13&lt;/version&gt;
+&lt;/dependency&gt;</code></pre><p>2.AccountDaoImpl.java</p>
+<pre><code>public class AccountDaoImpl implements AccountDao {
+
+private JdbcTemplate template;
+public void setTemplate(JdbcTemplate template) {
+    this.template = template;
+}
+
+public void findAll(){
+    List&lt;Map&lt;String, Object&gt;&gt; list = template.queryForList(&quot;select * from teacher&quot;);
+    for (Map&lt;String, Object&gt; map : list) {
+        for (String s : map.keySet()) {
+            System.out.println(s+&quot;:&quot;+map.get(s));
+        }
+    }
+  }
+}</code></pre><p>3.AccountServiceImpl.java</p>
+<pre><code>public class AccountServiceImpl implements AccountService {
+    private AccountDaoImpl accountDao;
+    public void setAccountDao(AccountDaoImpl accountDao) {
+        this.accountDao = accountDao;
+    }
+    @Override
+    public void findAll() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+        AccountDao accountDao = (AccountDao) applicationContext.getBean(&quot;accountDao&quot;);
+        accountDao.findAll();
+        System.out.println(&quot;username:&quot;+username);
+    }
+}</code></pre><p>4.applicationContext.xml</p>
+<pre><code>&lt;bean id=&quot;accountDao&quot; class=&quot;top.jigw.dao.impl.AccountDaoImpl&quot;&gt;
+        &lt;property name=&quot;template&quot; ref=&quot;jdbcTemplate&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;accountService&quot; class=&quot;top.jigw.service.impl.AccountServiceImpl&quot;&gt;
+        &lt;property name=&quot;accountDao&quot; ref=&quot;accountDao&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.alibaba.druid.pool.DruidDataSourceFactory&quot; factory-method=&quot;createDataSource&quot;&gt;
+        &lt;constructor-arg name=&quot;properties&quot;&gt;
+            &lt;props&gt;
+                &lt;prop key=&quot;driverClassName&quot;&gt;com.mysql.jdbc.Driver&lt;/prop&gt;
+                &lt;prop key=&quot;url&quot;&gt;jdbc:mysql:///test&lt;/prop&gt;
+                &lt;prop key=&quot;username&quot;&gt;root&lt;/prop&gt;
+                &lt;prop key=&quot;password&quot;&gt;123456&lt;/prop&gt;
+            &lt;/props&gt;
+        &lt;/constructor-arg&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+        &lt;constructor-arg name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/constructor-arg&gt;
+    &lt;/bean&gt;</code></pre><p>5.单元测试</p>
+<pre><code>public class test {
+    @Test
+    public void test01() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+        AccountService accountService = (AccountService) applicationContext.getBean(&quot;accountService&quot;);
+        accountService.findAll();
+    }
+}</code></pre><h2 id="注解形式"><a href="#注解形式" class="headerlink" title="注解形式"></a>注解形式</h2><p>1.首先同样是导入坐标</p>
+<p>2.提取jdbc.properties</p>
+<pre><code>jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql:///test
+jdbc.username=root
+jdbc.password=123456</code></pre><p>3.了解下Spring的一些基本注解吧</p>
+<pre><code>注解                             说明
+@Component        使用在类上用于实例化Bean
+@Controller            使用在web层类上用于实例化Bean
+@Service              使用在service层类上用于实例化Bean
+@Repository         使用在dao层类上用于实例化Bean
+@Autowired         使用在字段上用于根据类型依赖注入
+@Qualifier             结合@Autowired一起使用用于根据名称进行依赖注入
+@Resource         相当于@Autowired+@Qualifier，按照名称进行注入
+@Value             注入普通属性
+@Scope             标注Bean的作用范围
+@PostConstruct     使用在方法上标注该方法是Bean的初始化方法
+@PreDestroy         使用在方法上标注该方法是Bean的销毁方法
+@Configuration 用于指定当前类是一个 Spring 配置类，当创建容器时会从该类上加载注解
+@ComponentScan 用于指定 Spring 在初始化容器时要扫描的包。 作用和在 Spring 的 xml 配置文件中的 &lt;context:component-scan base-package=&quot;com.itheima&quot;/&gt;一样
+@Bean 使用在方法上，标注将该方法的返回值存储到 Spring 容器中
+@PropertySource 用于加载.properties 文件中的配置
+@Import 用于导入其他配置类</code></pre><p>使用注解进行开发时，需要在applicationContext.xml中配置组件扫描，作用是指定哪个包及其子包下的Bean需要<br>进行扫描以便识别使用注解配置的类、字段和方法。</p>
+<pre><code>&lt;context:component-scan base-package=&quot;top.jigw&quot;&gt;&lt;/context:component-scan&gt;</code></pre><p>4.AccountDaoImpl.java</p>
+<pre><code>@Repository(&quot;accountDao&quot;)
+public class AccountDaoImpl implements AccountDao {
+
+private JdbcTemplate template;
+public void setTemplate(JdbcTemplate template) {
+    this.template = template;
+}
+
+public void findAll(){
+    List&lt;Map&lt;String, Object&gt;&gt; list = template.queryForList(&quot;select * from teacher&quot;);
+    for (Map&lt;String, Object&gt; map : list) {
+        for (String s : map.keySet()) {
+            System.out.println(s+&quot;:&quot;+map.get(s));
+        }
+    }
+  }
+}</code></pre><p>5.AccountServiceImpl.java</p>
+<pre><code>@Service(&quot;accountService&quot;)
+public class AccountServiceImpl implements AccountService {
+    private AccountDaoImpl accountDao;
+    public void setAccountDao(AccountDaoImpl accountDao) {
+        this.accountDao = accountDao;
+    }
+    @Override
+    public void findAll() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+        AccountDao accountDao = (AccountDao) applicationContext.getBean(&quot;accountDao&quot;);
+        accountDao.findAll();
+        System.out.println(&quot;username:&quot;+username);
+    }
+}</code></pre><p>6.SpringConfiguration.java</p>
+<pre><code>@Configuration
+@ComponentScan(&quot;top.jigw&quot;)
+@Import({DataSourceConfiguration.class})
+public class SpringConfiguration {
+
+
+}</code></pre><p>7.DataSourceConfiguration.java</p>
+<pre><code>@PropertySource(&quot;classpath:jdbc.properties&quot;)
+public class DataSourceConfiguration {
+    @Value(&quot;${jdbc.driver}&quot;)
+    private String driver;
+    @Value(&quot;${jdbc.url}&quot;)
+    private String url;
+    @Value(&quot;${jdbc.username}&quot;)
+    private String username;
+    @Value(&quot;${jdbc.password}&quot;)
+    private String password;
+
+
+
+    @Bean(name = &quot;dataSource&quot;)
+    public DataSource getDataSource(){
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        return dataSource;
+    }
+
+    @Bean(name = &quot;template&quot;)
+    public JdbcTemplate getTemplate(DataSource dataSource){
+        return new JdbcTemplate(dataSource);
+    }
+}</code></pre><h2 id="集成Junit测试"><a href="#集成Junit测试" class="headerlink" title="集成Junit测试"></a>集成Junit测试</h2><p>这里需要导入spring-test依赖包</p>
+<pre><code>Spring集成Junit步骤
+①导入spring集成Junit的坐标
+②使用@Runwith注解替换原来的运行期
+③使用@ContextConfiguration指定配置文件或配置类
+④使用@Autowired注入需要测试的对象
+⑤创建测试方法进行测试</code></pre><p>SpringJunitTest.java</p>
+<pre><code>@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = SpringConfiguration.class)
+public class SpringJunitTest {
+    @Autowired
+    private AccountService accountService;
+    @Test
+    public void testService(){
+        accountService.findAll();
+    }
+}</code></pre></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Willis J</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2019/05/27/Spring通过DataSource获取数据库数据/">http://yoursite.com/2019/05/27/Spring通过DataSource获取数据库数据/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Spring/">Spring    </a><a class="post-meta__tags" href="/tags/maven/">maven    </a><a class="post-meta__tags" href="/tags/druid/">druid    </a><a class="post-meta__tags" href="/tags/junit/">junit    </a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2019/07/09/5d24093c2e95e82442.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-buttom"><i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lozad post-qr-code__img" data-src="/img/wechat.jpg"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lozad post-qr-code__img" data-src="/img/alipay.jpg"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="prev-post pull-left"><a href="/2019/05/29/Spring注解/"><img class="prev_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Previous Post</div><div class="prev_info"><span>Spring注解</span></div></a></div><div class="next-post pull-right"><a href="/2019/05/05/servlet域对象/"><img class="next_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>servlet域对象</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/05/31/Spring声明式事务全注解开发/" title="一个转账案例-Spring声明式事务全注解开发完成"><img class="relatedPosts_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><div class="relatedPosts_title">一个转账案例-Spring声明式事务全注解开发完成</div></a></div><div class="relatedPosts_item"><a href="/2019/05/29/Spring注解/" title="Spring注解"><img class="relatedPosts_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><div class="relatedPosts_title">Spring注解</div></a></div><div class="relatedPosts_item"><a href="/2019/06/01/web_xml头问题/" title="${pageContext.request.contextPath}与web.xml问题"><img class="relatedPosts_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><div class="relatedPosts_title">${pageContext.request.contextPath}与web.xml问题</div></a></div><div class="relatedPosts_item"><a href="/2018/09/07/eclipse插件maven/" title="eclipse的maven插件安装"><img class="relatedPosts_cover lozad" data-src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png"><div class="relatedPosts_title">eclipse的maven插件安装</div></a></div></div><div class="clear_both"></div></div></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2017 - 2019 By Willis J</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly"><span>Butterfly</span></a></div><div class="footer_custom_text">欢迎您呀</div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><section class="rightside" id="rightside"><i class="fa fa-book" id="readmode" title="Read Mode"> </i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion">簡</a><i class="fa fa-moon-o nightshift" id="nightshift" title="Dark Mode"></i></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script async src="/js/search/local-search.js"></script><script src="/js/nightshift.js"></script><script id="ribbon" src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/js/piao.js"></script><script src="/js/tw_cn.js"></script><script>translateInitilization()
+
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@1.2.2/instantpage.min.js" type="module"></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
