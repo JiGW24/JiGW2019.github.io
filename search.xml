@@ -616,9 +616,9 @@
       
         <tags>
             
-            <tag> interview </tag>
-            
             <tag> java </tag>
+            
+            <tag> interview </tag>
             
         </tags>
       
@@ -654,6 +654,31 @@
     
     
     <entry>
+      <title>序列化与transient关键字</title>
+      <link href="/2018/05/19/Java%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8Ctransient%E5%85%B3%E9%94%AE%E5%AD%97/"/>
+      <url>/2018/05/19/Java%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8Ctransient%E5%85%B3%E9%94%AE%E5%AD%97/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天碰到了transient这个关键字，稍微了解下是不让这个对象序列化的意思，关于序列化和这个关键字有必要认识一下。</p><h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>Java中的序列化是指Java中对象的序列化指的是将对象转换成以字节序列的形式来表示，这些字节序列包含了对象的数据和信息，一个序列化后的对象可以被写到数据库或文件中，也可用于网络传输，一般当我们使用缓存cache（内存空间不够有可能会本地存储到硬盘）或远程调用rpc（网络传输）的时候，经常需要让我们的实体类实现Serializable接口，目的就是为了让其可序列化。<br>序列化后的字节序列都是可以恢复成Java对象的，这个过程就是反序列化。</p><h2 id="transient关键字"><a href="#transient关键字" class="headerlink" title="transient关键字"></a>transient关键字</h2><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>让被修饰的成员变量不被序列化</p><h3 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h3><p>类中的字段值可以根据其它字段推导出来，如一个长方形类有三个属性：长度、宽度、面积，那么在序列化的时候，面积这个属性就没必要被序列化了</p><p>其他就是看具体业务场景了</p><h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul><li>在变量前加上这个关键字可以阻止该变量被序列化到文件中，在反序列化后，transient变量的值被设为初始值，如int型为0，对象为null</li><li>这个类实现了serilizable接口，则它的所有属性和方法都会自动序列化</li><li>一个静态变量不管是否被transient修饰，均不能被序列化</li></ul><p><strong><u>还有一条，transient关键字只能修饰变量，而不能修饰方法和类，这个有不同的声音，还有人说可以修饰方法？</u></strong><br>这个确定后在评论区见</p><hr><p>推荐一个🔗，大致看了下很不错</p><p><a href="http://www.360doc.com/content/13/0728/18/13247663_303173972.shtml" target="_blank" rel="noopener">Java序列化的高级认识</a></p><p>over</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JavaSE </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Serializable </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>多态的一道面试题</title>
       <link href="/2018/05/11/%E5%A4%9A%E6%80%81%E7%9A%84%E4%B8%80%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98/"/>
       <url>/2018/05/11/%E5%A4%9A%E6%80%81%E7%9A%84%E4%B8%80%E9%81%93%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
@@ -670,9 +695,9 @@
       
         <tags>
             
-            <tag> interview </tag>
-            
             <tag> java </tag>
+            
+            <tag> interview </tag>
             
         </tags>
       
