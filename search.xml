@@ -5,8 +5,8 @@
     
     <entry>
       <title>Redis实现消息队列</title>
-      <link href="/2019/07/15/Redis%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
-      <url>/2019/07/15/Redis%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</url>
+      <link href="/2019/07/10/Redis%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
+      <url>/2019/07/10/Redis%E5%AE%9E%E7%8E%B0%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</url>
       
         <content type="html"><![CDATA[<p>既然Redis可以重当消息中间件，还去用RabbitMQ等干嘛，这里就试着学习下Redis实现消息队列。</p><h2 id="订阅与发布"><a href="#订阅与发布" class="headerlink" title="订阅与发布"></a>订阅与发布</h2><p>先来看一下redis发布和订阅(pub/sub)，它是一种消息通信模式。即发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅任意数量的频道。</p><p>这里可以参考<a href="https://redis.io/topics/pubsub" target="_blank" rel="noopener">官网</a>，放下命令行看下结果</p><pre><code>127.0.0.1:6379&gt; publish cctv &quot;nba&quot;(integer) 2127.0.0.1:6379&gt; subscribe cctvReading messages... (press Ctrl-C to quit)1) &quot;subscribe&quot;2) &quot;cctv&quot;3) (integer) 11) &quot;message&quot;2) &quot;cctv&quot;3) &quot;nba&quot;127.0.0.1:6379&gt; subscribe cctvReading messages... (press Ctrl-C to quit)1) &quot;subscribe&quot;2) &quot;cctv&quot;3) (integer) 11) &quot;message&quot;2) &quot;cctv&quot;3) &quot;nba&quot;</code></pre><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>这个暂时不太了解，推荐一篇博文</p><p><a href="https://blog.csdn.net/zuoanyinxiang/article/details/50263945" target="_blank" rel="noopener">https://blog.csdn.net/zuoanyinxiang/article/details/50263945</a></p>]]></content>
       
@@ -21,6 +21,8 @@
         <tags>
             
             <tag> Redis </tag>
+            
+            <tag> MQ </tag>
             
         </tags>
       
@@ -44,6 +46,8 @@
       
       
         <tags>
+            
+            <tag> MQ </tag>
             
             <tag> RabbitMQ </tag>
             
@@ -80,8 +84,8 @@
     
     <entry>
       <title>SpringDataRedis实现缓存问题的解决</title>
-      <link href="/2019/07/01/SpringDataRedis%E5%A4%87%E5%BF%98/"/>
-      <url>/2019/07/01/SpringDataRedis%E5%A4%87%E5%BF%98/</url>
+      <link href="/2019/06/18/SpringDataRedis%E5%A4%87%E5%BF%98/"/>
+      <url>/2019/06/18/SpringDataRedis%E5%A4%87%E5%BF%98/</url>
       
         <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Spring Data是Spring的一个子项目。Spring官方提供一套数据层综合解决方案，用于简化数据库访问，支持NoSQL和关系数据库存储。包括Spring Data JPA 、Spring Data Redis 、SpringDataSolr、SpringDataElasticsearch 、Spring DataMongodb 等框架。</p><p><a href="https://spring.io/projects/spring-data-redis#overview" target="_blank" rel="noopener">Spring Data Redis（SDR）</a>提供Spring框架和Redis键值存储之间的集成！</p><h1 id="为什么SDR"><a href="#为什么SDR" class="headerlink" title="为什么SDR"></a>为什么SDR</h1><pre><code>Spring Framework是领先的全栈Java / JEE应用程序框架。它提供了一个轻量级容器和一个非侵入式编程模型，它通过使用依赖注入，AOP和便携式服务抽象来实现。NoSQL存储系统为经典RDBMS提供了水平可扩展性和速度的替代方案。在实现方面，键值存储代表NoSQL空间中最大（和最老）的成员之一。Spring Data Redis（SDR）框架通过Spring的优秀基础架构支持消除了与商店交互所需的冗余任务和样板代码，可以轻松编写使用Redis键值存储的Spring应用程序。</code></pre><p>这段文字来自官方文档。</p><p>在手上的项目中，选择了Jedis为客户端工具，它是Redis官方首选的Java客户端开发包，还有JRedis等多种。<br>spring-data-redis针对jedis提供了如下功能： </p><pre><code>1.连接池自动管理，提供了一个高度封装的“RedisTemplate”类，提供高级抽象，用于执行各种Redis操作，异常转换和序列化支持2.针对jedis客户端中大量api进行了归类封装,将同一类型操作封装为operation接口     ValueOperations：简单K-V操作    SetOperations：set类型数据操作    ZSetOperations：zset类型数据操作    HashOperations：针对map类型的数据操作    ListOperations：针对list类型的数据操作</code></pre><h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>0.命令</p><pre><code>redisTemplate.boundValueOps();//对字符串或值操作  set/get/deleteredisTemplate.boundListOps();//对List集合操作  lpush/rpush/range/index/remove redisTemplate.boundSetOps();//对Set集合操作  add/members/remove/deleteredisTemplate.boundHashOps();//对Hash操作  put/keys/values/get(key)/delete(key)redisTemplate.boundZSetOps();//对ZSet操作 add/range/reverseRange/incrementScore</code></pre><p>设置过期时间</p><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 存值</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"> <span class="meta">@Test</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">()</span></span>&#123;</span><br><span class="line">     redisTemplate.boundValueOps(<span class="string">"name"</span>).set(<span class="string">"aaaa"</span>);</span><br><span class="line">     redisTemplate.boundValueOps(<span class="string">"name"</span>).expire(<span class="number">10</span>,TimeUnit.SECONDS);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure><p>1.添加依赖</p><pre><code>&lt;!--缓存--&gt;&lt;dependency&gt;    &lt;groupId&gt;redis.clients&lt;/groupId&gt;    &lt;artifactId&gt;jedis&lt;/artifactId&gt;    &lt;version&gt;2.9.0&lt;/version&gt;&lt;/dependency&gt;&lt;dependency&gt;    &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;    &lt;artifactId&gt;spring-data-redis&lt;/artifactId&gt;    &lt;version&gt;2.0.5.RELEASE&lt;/version&gt;&lt;/dependency&gt;</code></pre><p>2.配置redis-config.properties</p><pre><code>redis.host=127.0.0.1redis.port=6379redis.pass=redis.database=0redis.maxIdle=300redis.maxWait=3000</code></pre><p>3.配置applicationContext-redis.xml</p><pre><code>   &lt;context:property-placeholder location=&quot;classpath:redis-config.properties&quot; /&gt;   &lt;!-- redis 相关配置 --&gt;    &lt;bean id=&quot;poolConfig&quot; class=&quot;redis.clients.jedis.JedisPoolConfig&quot;&gt;       &lt;property name=&quot;maxIdle&quot; value=&quot;${redis.maxIdle}&quot; /&gt;        &lt;property name=&quot;maxWaitMillis&quot; value=&quot;${redis.maxWait}&quot; /&gt;     &lt;/bean&gt;     &lt;bean id=&quot;jedisConnectionFactory&quot; class=&quot;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&quot;       p:host-name=&quot;${redis.host}&quot; p:port=&quot;${redis.port}&quot; p:password=&quot;${redis.pass}&quot; p:pool-config-ref=&quot;poolConfig&quot;/&gt;     &lt;bean id=&quot;redisTemplate&quot; class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;&gt;          &lt;property name=&quot;connectionFactory&quot; ref=&quot;jedisConnectionFactory&quot; /&gt;   &lt;/bean&gt;&lt;/beans&gt;  </code></pre><h1 id="业务场景分析"><a href="#业务场景分析" class="headerlink" title="业务场景分析"></a>业务场景分析</h1><ul><li>在做电商门户系统前台的分类导航和广告显示时，可能发生与数据库过于频繁的交互，或者恶意攻击的行为而导致数据库压力过大等问题，以致缓存穿透，缓存击穿和缓存雪崩问题。<blockquote><p>因此将这些数据在页面加载时就放到缓存中，定义一个Init类(实现InitializingBean)，重写方法。另外，在增删改的操作时，应该更新缓存。</p></blockquote></li></ul>]]></content>
       
@@ -131,31 +135,6 @@
     
     
     <entry>
-      <title>Mybatis分页插件PageHelper的问题</title>
-      <link href="/2019/06/08/Mybatis%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6PageHelper%E7%9A%84%E9%97%AE%E9%A2%98/"/>
-      <url>/2019/06/08/Mybatis%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6PageHelper%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-      
-        <content type="html"><![CDATA[<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p><font color="red">在使用Mybatis的第三方分页插件时，出现了下面的问题</font></p><pre><code>com.github.pagehelper.PageHelper cannot be cast to org.apache.ibatis.plugin.Interceptor</code></pre><p>具体如图</p><p><img src="https://i.loli.net/2019/06/08/5cfbae47865db77511.png" alt></p><p>附上代码</p><pre><code>&lt;!--引入分页助手--&gt;&lt;plugins&gt;    &lt;plugin interceptor=&quot;com.github.pagehelper.PageHelper&quot;&gt;        &lt;!--指定方言--&gt;        &lt;property name=&quot;dialect&quot; value=&quot;mysql&quot;/&gt;    &lt;/plugin&gt;&lt;/plugins&gt;</code></pre><p><font color="red">此出导入的jar包版本为5.1.2</font></p><p>关注报错信息发现，PageHelper无法转化为Interceptor,查阅信息，再打开源码查看的确有些端倪</p><p><img src="https://i.loli.net/2019/06/08/5cfbb0d6c41a131692.png" alt><br>有一个PageInterceptor实现了Interceptor接口，再将代码中的PageHelper改为PageInterceptor后，又出现了新问题</p><pre><code>Error parsing SQL Mapper Configuration. Cause: com.github.pagehelper.PageException: java.lang.ClassNotFoundException: mysql</code></pre><p><img src="https://i.loli.net/2019/06/08/5cfbb1773c2db17685.png" alt></p><p>查询信息后了解到，<font color="red">PageHelper插件4.0.0后的版本支持自动识别使用数据库，不用配置方言</font>，因此我将代码改为了如下</p><pre><code>&lt;plugins&gt;    &lt;plugin interceptor=&quot;com.github.pagehelper.PageInterceptor&quot;&gt;    &lt;/plugin&gt;&lt;/plugins&gt;</code></pre><p>程序正常运行！</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 框架 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Mybatis </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>zookeeper问题</title>
       <link href="/2019/06/03/zookeeper%E9%97%AE%E9%A2%98/"/>
       <url>/2019/06/03/zookeeper%E9%97%AE%E9%A2%98/</url>
@@ -175,35 +154,6 @@
             <tag> zookeeper </tag>
             
             <tag> dubbo </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>${pageContext.request.contextPath}与web.xml问题</title>
-      <link href="/2019/06/01/web_xml%E5%A4%B4%E9%97%AE%E9%A2%98/"/>
-      <url>/2019/06/01/web_xml%E5%A4%B4%E9%97%AE%E9%A2%98/</url>
-      
-        <content type="html"><![CDATA[<p>在使用idea中的maven-webapp骨架创建web项目时，我的web.xml文件头默认为</p><pre><code>&lt;!DOCTYPE web-app PUBLIC        &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;        &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;&lt;web-app&gt;</code></pre><p>之初，配置Spring前端控制器，全局参数…等等，<webapp>标签报红，但这并不影响项目的正常运行，因此也没换成</webapp></p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;         version=&quot;2.4&quot;&gt;</code></pre><p>但是，在处理SpringMVC请求去获取集合类型参数时，使用了${pageContext.request.contextPath} 表达式，比如下面</p><pre><code>&lt;script src=&quot;${pageContext.request.contextPath}/js/jquery-3.3.1.js&quot;&gt;&lt;/script&gt;    &lt;script&gt;        var userList = new Array();        userList.push({name:&quot;zhangsan&quot;,age:23});        userList.push({name:&quot;lisi&quot;,age:25});        $.ajax({            type:&quot;post&quot;,            url:&quot;${pageContext.request.contextPath}/user/success9&quot;,            data:JSON.stringify(userList),            contentType:&quot;application/json;charset=utf-8&quot;        });    &lt;/script&gt;</code></pre><p>报错如下</p><p><img src="https://i.loli.net/2019/06/01/5cf264ea37c8462438.png" alt></p><p>？？？难道使我js路径写的有问题？仔细检查并没有，此时idea控制台并没有报错详细信息。</p><p>再打开f12</p><p><img src="https://i.loli.net/2019/06/01/5cf264f4dce5d41472.png" alt></p><p>再把xml文件头改成上面那个，就好了…这里的version应该在2.4以上，因此在使用${pageContext.request.contextPath}表达式时，web.xml的头应该换成“常规形式”。</p><hr><p>觉得有用不如进入我的<a href="http://jigw.top/comments/" target="_blank" rel="noopener">Github博客</a>留个言吧，谢谢支持！</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> JavaWeb </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Spring </tag>
-            
-            <tag> xml </tag>
-            
-            <tag> SpringMVC </tag>
             
         </tags>
       
@@ -299,34 +249,7 @@
     
     
     <entry>
-      <title>String问题</title>
-      <link href="/2019/05/26/String/"/>
-      <url>/2019/05/26/String/</url>
-      
-        <content type="html"><![CDATA[<p>看到了一题自己不会的String面试题，想想面试官恶心啊，这里把String方面的面试题整理下吧</p><p><strong>持续更新</strong></p><hr><h2 id="记住"><a href="#记住" class="headerlink" title="记住"></a>记住</h2><h3 id="创建字符串方式的区别"><a href="#创建字符串方式的区别" class="headerlink" title="创建字符串方式的区别"></a>创建字符串方式的区别</h3><ul><li><p>常量式创建<br>如 String str1 = “helloworld”;</p><blockquote><p>JVM在实例化字符串时使用了<strong>字符串常量池</strong><br>每当我们创建字符串常量时，JVM会首先检查字符串常量池，如果该字符串已经存在常量池中，那么就直接返回常量池中的实例引用。如果字符串不存在常量池中，就会实例化该字符串并且将其放到常量池中。由于String字符串的不可变性我们可以十分肯定常量池中一定不存在两个相同的字符串。</p></blockquote></li><li><p>对象式创建<br>如 String str2 = new String(“helloworld”);</p><blockquote><p>不存储于字符串池，而是在堆内存中。我们可以调用intern()方法将该字符串对象存储在字符串池，如果字符串池已经有了同样值的字符串，则返回引用。</p></blockquote></li></ul><p>网上有张图片很容易理解<br><img src="https://i.loli.net/2019/07/14/5d2af0ed2279839556.png" alt></p><h3 id="intern-方法"><a href="#intern-方法" class="headerlink" title="intern()方法"></a>intern()方法</h3><p>当intern()方法被调用，如果字符串池中含有一个字符串和当前调用方法的字符串eqauls相等，那么就会返回池中的字符串。如果池中没有的话，则首先将当前字符串加入到池中，然后返回引用。</p><h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="想法"><a href="#想法" class="headerlink" title="想法"></a>想法</h3><p>由于常量池中绝对不存在相同的字符串对象，普通比较就很简单了。<br>其他比较这时看是否 调用intern()方法了。</p><ol><li><p> String s1 = “abc”;<br> //abc存在字符串常量池中，s1地址指向abc常量池的首地址(指针)<br> String s2 = new String(“abc”);<br> //abc存在堆中，s2地址指向我们abc在堆中的首地址<br> String s3 = s2.intern();<br> //intern()作用节省内存的存储空间，会去常量池中的地址给s3,找不到就添加到池中，再返回地址给s3</p><p> System.out.println(s1==s2);<br> System.out.println(s2==s3);<br> System.out.println(s1==s3);</p></li></ol><blockquote><p>答案<br>false/false/true</p></blockquote><ol start="2"><li>下面的代码创建了几个字符串对象<br> String str1 = new String(“helloworld”);<br> String str2 = new String(“helloworld”);</li></ol><blockquote><p>3个对象<br>第一行，字符串池中的”helloworld”对象和堆内存中创建值为”helloworld”新字符串<br>第二行，堆内存中创建值为”helloworld”新字符串，这里字符串池中的”helloworld”重用了</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> JavaSE </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> String </tag>
-            
-            <tag> interview </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>redis了解</title>
+      <title>redis了解(转载)</title>
       <link href="/2019/05/24/Redis/"/>
       <url>/2019/05/24/Redis/</url>
       
@@ -345,37 +268,6 @@
             <tag> redis </tag>
             
             <tag> SQL </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>servlet域对象</title>
-      <link href="/2019/05/05/servlet%E5%9F%9F%E5%AF%B9%E8%B1%A1/"/>
-      <url>/2019/05/05/servlet%E5%9F%9F%E5%AF%B9%E8%B1%A1/</url>
-      
-        <content type="html"><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在学习servlet的过程中，数据共享是必须的操作。总的来说，我们要想共享数据往往是利用<font color="pink" size="3"><strong>多个servlet或对象共同操作的一个对象</strong></font>，这类对象称之为<font color="pink" size="3"><strong>作用域</strong></font>。</p><h2 id="HttpServletRequest"><a href="#HttpServletRequest" class="headerlink" title="HttpServletRequest"></a>HttpServletRequest</h2><p>针对<font color="red" size="3"><strong>一次请求</strong></font>。<br>使用该对象保存数据，一次请求(一个页面，如果是请求转发多个页面)内有效。</p><ul><li>创建：客户端想服务器端发送一次请求</li><li>销毁：服务器响应后销毁</li></ul><h2 id="HttpServletSession"><a href="#HttpServletSession" class="headerlink" title="HttpServletSession"></a>HttpServletSession</h2><p>针对<font color="red" size="3"><strong>一次会话</strong></font>。<br>使用该对象保存数据，一次会话(多次请求)有效。</p><ul><li>创建：请求未携带jsessionid时创建session对象，请求携带jsessionid但找不到对应的session时创建session对象。</li><li>销毁：<pre><code>1. 未正常关闭服务器2. 手动调用了Session的invalidate方法3. session过期了，有效时间默认为30分钟</code></pre></li></ul><h2 id="HttpServletContext"><a href="#HttpServletContext" class="headerlink" title="HttpServletContext"></a>HttpServletContext</h2><p>针对<font color="red" size="3"><strong>一个web应用</strong></font>。<br>一个web应用只有一个ServletContext对象，该对象保存的数据对整个web应用都有效。我们可以把ServletContext与其他对象描绘成水和鱼类的关系。</p><ul><li>创建：服务器启动的时候</li><li>销毁：服务器关闭的时候或者项目移除</li></ul><h3 id="三个作用域对象操作的API"><a href="#三个作用域对象操作的API" class="headerlink" title="三个作用域对象操作的API"></a>三个作用域对象操作的API</h3><p>api都是一样的,完成存取和销毁的操作</p><ul><li>存放数据：setAttribute(name,value)</li><li>获得数据：getAttribute(name)</li><li>删除数据：removeAttribute(name)</li></ul><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>servlet为我们提供的三大域对象来帮助我们实现不同情况下的数据共享,<font color="blue" size="3"><strong>若一个业务功能使用这三个域对象都可以实现,我们一般选用最小的域对象</strong></font>.作用域越小,生命周期越短,在一定程度上可以提供程序的执行效率</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> JavaWeb </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> servlet </tag>
-            
-            <tag> request </tag>
-            
-            <tag> session </tag>
-            
-            <tag> ServletContext </tag>
             
         </tags>
       
@@ -413,29 +305,50 @@
     
     
     <entry>
-      <title>XML解析</title>
-      <link href="/2019/04/26/XML%E8%A7%A3%E6%9E%90/"/>
-      <url>/2019/04/26/XML%E8%A7%A3%E6%9E%90/</url>
+      <title>String问题</title>
+      <link href="/2019/04/16/String/"/>
+      <url>/2019/04/16/String/</url>
       
-        <content type="html"><![CDATA[<h1 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h1><hr><p>操作xml文档，将文档的数据读取到内存中。</p><h2 id="解析方式"><a href="#解析方式" class="headerlink" title="解析方式"></a>解析方式</h2><pre><code>DOM 将标记语言文档一次性加载进内存，在内存中形成一棵dom树优点：操作方便，可以对文档进行CRUD的所有操作缺点：占内存SAX 逐行读取，基于事件驱动优点：不占内存，相比DOM效率更高缺点：只能读取，不能增删改</code></pre><h2 id="解析器"><a href="#解析器" class="headerlink" title="解析器"></a>解析器</h2><p>常见解析器</p><pre><code>1. JAXP：sun公司提供的解析器，支持dom和sax两种思想2. DOM4J：一款非常优秀的解析器3. Jsoup：jsoup 是一款Java 的HTML解析器，可直接解析某个URL地址、HTML文本内容。它提供了一套非常省力的API，可通过DOM，CSS以及类似于jQuery的操作方法来取出和操作数据。4. PULL：Android操作系统内置的解析器，sax方式的。</code></pre><h3 id="DOM4J"><a href="#DOM4J" class="headerlink" title="DOM4J"></a>DOM4J</h3><p>本文中利用dom4j和xpath的支持进行解析，DOM4J中还提供了其他几种遍历节点的方法，例如枚举(Iterator)、递归、visitor模式等等。</p><p>范例</p><pre><code>1. 导包    dom4j-1.6.1.jar    jaxen-1.1-beta-6.jar2.     public class TestDemo01 {            @Test            public void method() throws DocumentException {            //创建解析器            SAXReader saxReader = new SAXReader();            //解析xml            Document document = saxReader.read(TestDemo01.class.getClassLoader().getResourceAsStream(&quot;student.xml&quot;));            //获取根标签            Element rootElement = document.getRootElement();            /*System.out.println(rootElement);            //获取子标签            List elements = rootElement.elements();            //获取第一个            Object stu1 = elements.get(0);            System.out.println(stu1);            System.out.println(&quot;----------&quot;);            //student个数            List student = rootElement.elements(&quot;student&quot;);            int size = student.size();            System.out.println(size);            System.out.println(&quot;----------&quot;);            //获取第一个学号            Element stu = rootElement.element(&quot;student&quot;);            String s1 = stu.attributeValue(&quot;number&quot;);            System.out.println(s1);            System.out.println(&quot;----------&quot;);            //获取第一个年龄            Element age1 = stu.element(&quot;age&quot;);            String text = age1.getText();            System.out.println(text);            // 即每一级便签和下一级标签用element方法获取第一个        }    }3. 结合xpath            Element element = (Element)rootElement.selectSingleNode(&quot;//student[@number=&apos;heima_0002&apos;]&quot;);            System.out.println(element);//xpath语法可通过xpath API文档查询</code></pre><h4 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h4><p>在idea中编程时，使用Schema约束会在写xml文件是自动出现 <strong>xmlns=”<a href="http://www.itcast.cn/xml&quot;" target="_blank" rel="noopener">http://www.itcast.cn/xml&quot;</a></strong>，使用这样的xml编码方式再结合xpath进行解析时，会发生找不到结果的问题</p><pre><code>&lt;students xmlns=&quot;http://www.itcast.cn/xml&quot;&gt;    &lt;student number=&quot;heima_0001&quot;&gt;    &lt;name&gt;zhangsan&lt;/name&gt;    &lt;age&gt;24&lt;/age&gt;    &lt;sex&gt;male&lt;/sex&gt;    &lt;/student&gt;&lt;/students&gt;</code></pre><p>如获取</p><pre><code>Element element = (Element)rootElement.selectSingleNode(&quot;//student[@number=&apos;heima_0002&apos;]&quot;);  System.out.println(element);</code></pre><p>结果为<strong>null</strong></p><h3 id="Jsoup"><a href="#Jsoup" class="headerlink" title="Jsoup"></a>Jsoup</h3><p>步骤：</p><pre><code>1. 导入jar包        jsoup-1.11.2.jar        JsoupXpath-0.3.2.jar2. 获取Document对象3. 获取对应的标签Element对象4. 获取数据</code></pre><p>代码：</p><pre><code>//2.1获取student.xml的path  String path = JsoupDemo1.class.getClassLoader().getResource(&quot;student.xml&quot;).getPath();  //2.2解析xml文档，加载文档进内存，获取dom树---&gt;Document  Document document = Jsoup.parse(new File(path), &quot;utf-8&quot;);  //3.获取元素对象 Element  Elements elements = document.getElementsByTag(&quot;name&quot;);  System.out.println(elements.size());  //3.1获取第一个name的Element对象  Element element = elements.get(0);  //3.2获取数据  String name = element.text();  System.out.println(name);</code></pre><p>对象的使用：</p><pre><code>1. Jsoup：工具类，可以解析html或xml文档，返回Document    * parse：解析html或xml文档，返回Document        * parse​(File in, String charsetName)：解析xml或html文件的。        * parse​(String html)：解析xml或html字符串        * parse​(URL url, int timeoutMillis)：通过网络路径获取指定的html或xml的文档对象2. Document：文档对象。代表内存中的dom树    * 获取Element对象        * getElementById​(String id)：根据id属性值获取唯一的element对象        * getElementsByTag​(String tagName)：根据标签名称获取元素对象集合        * getElementsByAttribute​(String key)：根据属性名称获取元素对象集合        * getElementsByAttributeValue​(String key, String value)：根据对应的属性名和属性值获取元素对象集合3. Elements：元素Element对象的集合。可以当做 ArrayList&lt;Element&gt;来使用4. Element：元素对象    1. 获取子元素对象        * getElementById​(String id)：根据id属性值获取唯一的element对象        * getElementsByTag​(String tagName)：根据标签名称获取元素对象集合        * getElementsByAttribute​(String key)：根据属性名称获取元素对象集合        * getElementsByAttributeValue​(String key, String value)：根据对应的属性名和属性值获取元素对象集合    2. 获取属性值        * String attr(String key)：根据属性名称获取属性值    3. 获取文本内容        * String text():获取文本内容        * String html():获取标签体的所有内容(包括字标签的字符串内容)5. Node：节点对象    * 是Document和Element的父类</code></pre><p>快捷查询方式：</p><pre><code>1. selector:选择器    * 使用的方法：Elements    select​(String cssQuery)        * 语法：参考Selector类中定义的语法2. XPath：XPath即为XML路径语言，它是一种用来确定XML（标准通用标记语言的子集）文档中某部分位置的语言    * 使用Jsoup的Xpath需要额外导入jar包。    * 查询w3cshool参考手册，使用xpath的语法完成查询    * 代码：        //1.获取student.xml的path        String path = JsoupDemo6.class.getClassLoader().getResource(&quot;student.xml&quot;).getPath();        //2.获取Document对象        Document document = Jsoup.parse(new File(path), &quot;utf-8&quot;);        //3.根据document对象，创建JXDocument对象        JXDocument jxDocument = new JXDocument(document);        //4.结合xpath语法查询        //4.1查询所有student标签        List&lt;JXNode&gt; jxNodes = jxDocument.selN(&quot;//student&quot;);        for (JXNode jxNode : jxNodes) {            System.out.println(jxNode);        }        System.out.println(&quot;--------------------&quot;);        //4.2查询所有student标签下的name标签        List&lt;JXNode&gt; jxNodes2 = jxDocument.selN(&quot;//student/name&quot;);        for (JXNode jxNode : jxNodes2) {            System.out.println(jxNode);        }        System.out.println(&quot;--------------------&quot;);        //4.3查询student标签下带有id属性的name标签        List&lt;JXNode&gt; jxNodes3 = jxDocument.selN(&quot;//student/name[@id]&quot;);        for (JXNode jxNode : jxNodes3) {            System.out.println(jxNode);        }        System.out.println(&quot;--------------------&quot;);        //4.4查询student标签下带有id属性的name标签 并且id属性值为itcast        List&lt;JXNode&gt; jxNodes4 = jxDocument.selN(&quot;//student/name[@id=&apos;itcast&apos;]&quot;);        for (JXNode jxNode : jxNodes4) {            System.out.println(jxNode);        }</code></pre>]]></content>
+        <content type="html"><![CDATA[<p>看到了一题自己不会的String面试题，想想面试官恶心啊，这里把String方面的面试题整理下吧</p><p><strong>持续更新</strong></p><hr><h2 id="记住"><a href="#记住" class="headerlink" title="记住"></a>记住</h2><h3 id="创建字符串方式的区别"><a href="#创建字符串方式的区别" class="headerlink" title="创建字符串方式的区别"></a>创建字符串方式的区别</h3><ul><li><p>常量式创建<br>如 String str1 = “helloworld”;</p><blockquote><p>JVM在实例化字符串时使用了<strong>字符串常量池</strong><br>每当我们创建字符串常量时，JVM会首先检查字符串常量池，如果该字符串已经存在常量池中，那么就直接返回常量池中的实例引用。如果字符串不存在常量池中，就会实例化该字符串并且将其放到常量池中。由于String字符串的不可变性我们可以十分肯定常量池中一定不存在两个相同的字符串。</p></blockquote></li><li><p>对象式创建<br>如 String str2 = new String(“helloworld”);</p><blockquote><p>不存储于字符串池，而是在堆内存中。我们可以调用intern()方法将该字符串对象存储在字符串池，如果字符串池已经有了同样值的字符串，则返回引用。</p></blockquote></li></ul><p>网上有张图片很容易理解<br><img src="https://i.loli.net/2019/07/14/5d2af0ed2279839556.png" alt></p><h3 id="intern-方法"><a href="#intern-方法" class="headerlink" title="intern()方法"></a>intern()方法</h3><p>当intern()方法被调用，如果字符串池中含有一个字符串和当前调用方法的字符串eqauls相等，那么就会返回池中的字符串。如果池中没有的话，则首先将当前字符串加入到池中，然后返回引用。</p><h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="想法"><a href="#想法" class="headerlink" title="想法"></a>想法</h3><p>由于常量池中绝对不存在相同的字符串对象，普通比较就很简单了。<br>其他比较这时看是否 调用intern()方法了。</p><ol><li><p> String s1 = “abc”;<br> //abc存在字符串常量池中，s1地址指向abc常量池的首地址(指针)<br> String s2 = new String(“abc”);<br> //abc存在堆中，s2地址指向我们abc在堆中的首地址<br> String s3 = s2.intern();<br> //intern()作用节省内存的存储空间，会去常量池中的地址给s3,找不到就添加到池中，再返回地址给s3</p><p> System.out.println(s1==s2);<br> System.out.println(s2==s3);<br> System.out.println(s1==s3);</p></li></ol><blockquote><p>答案<br>false/false/true</p></blockquote><ol start="2"><li>下面的代码创建了几个字符串对象<br> String str1 = new String(“helloworld”);<br> String str2 = new String(“helloworld”);</li></ol><blockquote><p>3个对象<br>第一行，字符串池中的”helloworld”对象和堆内存中创建值为”helloworld”新字符串<br>第二行，堆内存中创建值为”helloworld”新字符串，这里字符串池中的”helloworld”重用了</p></blockquote>]]></content>
       
       
       <categories>
           
-          <category> JavaWeb </category>
+          <category> JavaSE </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> xml </tag>
+            <tag> String </tag>
             
-            <tag> xpath </tag>
+            <tag> interview </tag>
             
-            <tag> DOM4J </tag>
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Mybatis分页插件PageHelper的问题</title>
+      <link href="/2019/04/08/Mybatis%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6PageHelper%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+      <url>/2019/04/08/Mybatis%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6PageHelper%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p><font color="red">在使用Mybatis的第三方分页插件时，出现了下面的问题</font></p><pre><code>com.github.pagehelper.PageHelper cannot be cast to org.apache.ibatis.plugin.Interceptor</code></pre><p>具体如图</p><p><img src="https://i.loli.net/2019/06/08/5cfbae47865db77511.png" alt></p><p>附上代码</p><pre><code>&lt;!--引入分页助手--&gt;&lt;plugins&gt;    &lt;plugin interceptor=&quot;com.github.pagehelper.PageHelper&quot;&gt;        &lt;!--指定方言--&gt;        &lt;property name=&quot;dialect&quot; value=&quot;mysql&quot;/&gt;    &lt;/plugin&gt;&lt;/plugins&gt;</code></pre><p><font color="red">此出导入的jar包版本为5.1.2</font></p><p>关注报错信息发现，PageHelper无法转化为Interceptor,查阅信息，再打开源码查看的确有些端倪</p><p><img src="https://i.loli.net/2019/06/08/5cfbb0d6c41a131692.png" alt><br>有一个PageInterceptor实现了Interceptor接口，再将代码中的PageHelper改为PageInterceptor后，又出现了新问题</p><pre><code>Error parsing SQL Mapper Configuration. Cause: com.github.pagehelper.PageException: java.lang.ClassNotFoundException: mysql</code></pre><p><img src="https://i.loli.net/2019/06/08/5cfbb1773c2db17685.png" alt></p><p>查询信息后了解到，<font color="red">PageHelper插件4.0.0后的版本支持自动识别使用数据库，不用配置方言</font>，因此我将代码改为了如下</p><pre><code>&lt;plugins&gt;    &lt;plugin interceptor=&quot;com.github.pagehelper.PageInterceptor&quot;&gt;    &lt;/plugin&gt;&lt;/plugins&gt;</code></pre><p>程序正常运行！</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 框架 </category>
+          
+      </categories>
+      
+      
+        <tags>
             
-            <tag> Jsoup </tag>
+            <tag> Mybatis </tag>
             
         </tags>
       
@@ -502,7 +415,7 @@
       <link href="/2019/02/20/190405/"/>
       <url>/2019/02/20/190405/</url>
       
-        <content type="html"><![CDATA[<p><img src="https://i.loli.net/2019/04/05/5ca771980ba09.png" alt="1"></p><h3 id="不去可惜了"><a href="#不去可惜了" class="headerlink" title="不去可惜了"></a>不去可惜了</h3><h3 id="一般般的去干啥"><a href="#一般般的去干啥" class="headerlink" title="一般般的去干啥"></a>一般般的去干啥</h3><h3 id="差点？人生就是这样"><a href="#差点？人生就是这样" class="headerlink" title="差点？人生就是这样"></a>差点？人生就是这样</h3><h3 id="不去！"><a href="#不去！" class="headerlink" title="不去！"></a>不去！</h3>]]></content>
+        <content type="html"><![CDATA[<p><img src="https://i.loli.net/2019/07/14/5d2b4a9ed4a1888918.jpg" alt="2018"></p><h2 id="不去可惜了"><a href="#不去可惜了" class="headerlink" title="不去可惜了"></a>不去可惜了</h2><h2 id="一般般的去干啥"><a href="#一般般的去干啥" class="headerlink" title="一般般的去干啥"></a>一般般的去干啥</h2><h2 id="差点？人生就是这样"><a href="#差点？人生就是这样" class="headerlink" title="差点？人生就是这样"></a>差点？人生就是这样</h2><h1 id="不去"><a href="#不去" class="headerlink" title="不去"></a>不去</h1>]]></content>
       
       
       <categories>
@@ -550,48 +463,25 @@
     
     
     <entry>
-      <title>XML简介与约束</title>
-      <link href="/2018/12/22/XML%E5%85%A5%E9%97%A8/"/>
-      <url>/2018/12/22/XML%E5%85%A5%E9%97%A8/</url>
+      <title>乐观锁和悲观锁是什么</title>
+      <link href="/2018/12/27/%E4%B9%90%E8%A7%82%E6%82%B2%E8%A7%82%E9%94%81/"/>
+      <url>/2018/12/27/%E4%B9%90%E8%A7%82%E6%82%B2%E8%A7%82%E9%94%81/</url>
       
-        <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><hr><ul><li><p>XML是可扩展标记语言（Extensible Markup Language），可扩展即标签都是自定义的。</p></li><li><p>功能：存储数据    </p><pre><code>1. 配置文件2. 在网络中传输</code></pre></li><li><p>与HTML的区别</p><pre><code>1. xml标签都是自定义的，html标签是预定义。2. xml的语法严格（严格区分大小写），html语法松散3. xml是存储数据的，html是展示数据</code></pre></li><li><p>各个平台之间的数据传输类型，但现在已经被JSON替换了。XML可以存储简单、小量的数据。</p></li></ul><h1 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h1><hr><h2 id="写法"><a href="#写法" class="headerlink" title="写法"></a>写法</h2><p>注意：</p><ul><li>属性值必须使用引号(单双都可)引起来</li><li>标签名称区分大小写</li></ul><p>示例</p><pre><code>    &lt;?xml version=&apos;1.0&apos; ?&gt;&lt;users&gt;    &lt;user id=&apos;1&apos;&gt;        &lt;name&gt;zhangsan&lt;/name&gt;        &lt;age&gt;23&lt;/age&gt;        &lt;gender&gt;男&lt;/gender&gt;    &lt;/user&gt;    &lt;user id=&apos;2&apos;&gt;        &lt;name&gt;lisi&lt;/name&gt;        &lt;age&gt;25&lt;/age&gt;        &lt;gender&gt;男&lt;/gender&gt;    &lt;/user&gt;&lt;/users&gt;</code></pre><h2 id="组成部分"><a href="#组成部分" class="headerlink" title="组成部分"></a>组成部分</h2><pre><code>1. 文档声明    1. 格式：&lt;?xml 属性列表 ?&gt;    2. 属性列表：        * version：版本号，必须的属性        * encoding：编码方式。告知解析引擎当前文档使用的字符集，默认值：ISO-8859-1        * standalone：是否独立            * 取值：                * yes：不依赖其他文件                * no：依赖其他文件2. 指令(了解)：结合css的    * &lt;?xml-stylesheet type=&quot;text/css&quot; href=&quot;a.css&quot; ?&gt;3. 标签：标签名称自定义的    * 规则：        * 名称可以包含字母、数字以及其他的字符         * 名称不能以数字或者标点符号开始         * 名称不能以字母 xml（或者 XML、Xml 等等）开始         * 名称不能包含空格 4. 属性：    id属性值唯一5. 文本：    * CDATA区：在该区域中的数据会被原样展示        * 格式：  &lt;![CDATA[ 数据 ]]&gt;</code></pre><h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p>约束为规定XML文档的编写规则。</p><p>第一种约束 <strong>DTD</strong></p><pre><code>外部dtd：将约束的规则定义在外部的dtd文件中                    * 本地：&lt;!DOCTYPE 根标签名 SYSTEM &quot;dtd文件的位置&quot;&gt;                    * 网络：&lt;!DOCTYPE 根标签名 PUBLIC &quot;dtd文件名字&quot; &quot;dtd文件的位置URL&quot;&gt;内部dtd：写在内部</code></pre><p>外部范例</p><pre><code>//student.dtd文件&lt;!ELEMENT students (student+) &gt;&lt;!ELEMENT student (name,age,sex)&gt;&lt;!ELEMENT name (#PCDATA)&gt;&lt;!ELEMENT age (#PCDATA)&gt;&lt;!ELEMENT sex (#PCDATA)&gt;&lt;!ATTLIST student number ID #REQUIRED&gt;//student.xml文件&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;&lt;!DOCTYPE students SYSTEM &quot;student.dtd&quot;&gt;&lt;students&gt;    &lt;student number=&quot;s001&quot;&gt;        &lt;name&gt;zhangsan&lt;/name&gt;        &lt;age&gt;abc&lt;/age&gt;        &lt;sex&gt;hehe&lt;/sex&gt;    &lt;/student&gt;    &lt;student number=&quot;s002&quot;&gt;        &lt;name&gt;lisi&lt;/name&gt;        &lt;age&gt;24&lt;/age&gt;        &lt;sex&gt;female&lt;/sex&gt;    &lt;/student&gt;&lt;/students&gt;</code></pre><p>第二种约束 <strong>Schema</strong></p><p>引入</p><pre><code>    1. 填写xml文档的根元素    2. 引入xsi前缀.  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;    3. 引入xsd文件命名空间.  xsi:schemaLocation=&quot;http://www.itcast.cn/xml  student.xsd&quot;    4. 为每一个xsd约束声明一个前缀,作为标识  xmlns=&quot;http://www.itcast.cn/xml&quot;&lt;students   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;        xmlns=&quot;http://www.itcast.cn/xml&quot;        xsi:schemaLocation=&quot;http://www.itcast.cn/xml  student.xsd&quot;&gt;</code></pre><p>范例</p><p>student.xsd</p><pre><code>&lt;?xml version=&quot;1.0&quot; ?&gt;&lt;xsd:schema xmlns=&quot;http://www.itcast.cn/xml&quot;            xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;            targetNamespace=&quot;http://www.itcast.cn/xml&quot; elementFormDefault=&quot;qualified&quot;&gt;    &lt;xsd:element name=&quot;students&quot; type=&quot;studentsType&quot;/&gt;    &lt;xsd:complexType name=&quot;studentsType&quot;&gt;        &lt;xsd:sequence&gt;            &lt;xsd:element name=&quot;student&quot; type=&quot;studentType&quot; minOccurs=&quot;0&quot; maxOccurs=&quot;unbounded&quot;/&gt;        &lt;/xsd:sequence&gt;    &lt;/xsd:complexType&gt;    &lt;xsd:complexType name=&quot;studentType&quot;&gt;        &lt;xsd:sequence&gt;            &lt;xsd:element name=&quot;name&quot; type=&quot;xsd:string&quot;/&gt;            &lt;xsd:element name=&quot;age&quot; type=&quot;ageType&quot; /&gt;            &lt;xsd:element name=&quot;sex&quot; type=&quot;sexType&quot; /&gt;        &lt;/xsd:sequence&gt;        &lt;xsd:attribute name=&quot;number&quot; type=&quot;numberType&quot; use=&quot;required&quot;/&gt;    &lt;/xsd:complexType&gt;    &lt;xsd:simpleType name=&quot;sexType&quot;&gt;        &lt;xsd:restriction base=&quot;xsd:string&quot;&gt;            &lt;xsd:enumeration value=&quot;male&quot;/&gt;            &lt;xsd:enumeration value=&quot;female&quot;/&gt;        &lt;/xsd:restriction&gt;    &lt;/xsd:simpleType&gt;    &lt;xsd:simpleType name=&quot;ageType&quot;&gt;        &lt;xsd:restriction base=&quot;xsd:integer&quot;&gt;            &lt;xsd:minInclusive value=&quot;0&quot;/&gt;            &lt;xsd:maxInclusive value=&quot;256&quot;/&gt;        &lt;/xsd:restriction&gt;    &lt;/xsd:simpleType&gt;    &lt;xsd:simpleType name=&quot;numberType&quot;&gt;        &lt;xsd:restriction base=&quot;xsd:string&quot;&gt;            &lt;xsd:pattern value=&quot;heima_\d{4}&quot;/&gt;        &lt;/xsd:restriction&gt;    &lt;/xsd:simpleType&gt;&lt;/xsd:schema&gt;</code></pre><p>student.xml</p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;&lt;students   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;            xmlns=&quot;http://www.itcast.cn/xml&quot;            xsi:schemaLocation=&quot;http://www.itcast.cn/xml  student.xsd&quot;&gt;    &lt;student number=&quot;heima_0001&quot;&gt;        &lt;name&gt;tom&lt;/name&gt;        &lt;age&gt;18&lt;/age&gt;        &lt;sex&gt;male&lt;/sex&gt;    &lt;/student&gt;&lt;/students&gt;</code></pre>]]></content>
+        <content type="html"><![CDATA[<h2 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h2><p>简单来说，总是假设最好的情况，每次去拿数据的时候都认为别人不会修改。</p><p>所以每次获取数据的时候都不会进行加锁，但是在更新数据的时候需要判断该数据是否被别人修改过。如果数据被其他线程修改，则不进行数据更新，如果数据没有被其他线程修改，则进行数据更新。由于数据没有进行加锁，期间该数据可以被其他线程进行读写操作。</p><h3 id="操作方式"><a href="#操作方式" class="headerlink" title="操作方式"></a>操作方式</h3><p>version方式和CAS操作方式。</p><h4 id="version方式"><a href="#version方式" class="headerlink" title="version方式"></a>version方式</h4><p>一般是在数据表中加上一个数据版本号version字段，表示数据被修改的次数，当数据被修改时，version值会加1。当线程A要更新数据值时，在读取数据的同时也会读取version值，在提交更新时，若刚才读取到的version值为当前数据库中的version值相等时才更新，否则重试更新操作，直到更新成功。<br>例如</p><pre><code>update table set x=x+1, version=version+1 where     id=#{id} and version=#{version};</code></pre><h4 id="CAS方式"><a href="#CAS方式" class="headerlink" title="CAS方式"></a>CAS方式</h4><p>即compare and swap（比较与交换），是一种有名的无锁算法。无锁编程，即不使用锁的情况下实现多线程之间的变量同步，也就是在没有线程被阻塞的情况下实现变量的同步，所以也叫非阻塞同步（Non-blocking Synchronization）。</p><p>CAS算法涉及到三个操作数：需要读写的内存值，进行比较的值，拟写入的新值</p><p>当需要更新时，判断当前内存值与之前取到的值是否相等，若相等，则用新值更新，若失败则重试。<br>一般情况下是一个自旋操作，即不断的重试。</p><h2 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h2><p>总是假设最坏的情况，每次去拿数据的时候都认为别人会修改</p><p>所以每次获取数据的时候都会进行加锁，确保在自己使用的过程中数据不会被别人修改，使用完成后进行数据解锁。由于数据进行加锁，期间对该数据进行读写的其他线程都会进行等待。</p><p>在Java中，<strong>synchronized</strong>的思想也是悲观锁。</p><h2 id="应用场景比较"><a href="#应用场景比较" class="headerlink" title="应用场景比较"></a>应用场景比较</h2><p>很清楚一点的是反复加锁多于读操作多的业务太傻了，因此</p><ul><li><strong>乐观锁适合读操作频繁的场景</strong>，如果出现大量的写入操作，数据发生冲突的可能性就会增大，为了保证数据的一致性，应用层需要不断的重新获取数据，这样会增加大量的查询操作，降低了系统的吞吐量。</li><li><strong>悲观锁适合写操作频繁的场景</strong>，如果出现大量的读取操作，每次读取的时候都会进行加锁，这样会增加大量的锁的开销，降低了系统的吞吐量。</li></ul><p>over</p>]]></content>
       
       
       <categories>
           
-          <category> JavaWeb </category>
+          <category> DB </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> xml </tag>
+            <tag> SQL </tag>
             
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Tomcat问题和项目部署</title>
-      <link href="/2018/10/09/tomcat%E9%85%8D%E7%BD%AE/"/>
-      <url>/2018/10/09/tomcat%E9%85%8D%E7%BD%AE/</url>
-      
-        <content type="html"><![CDATA[<h1 id="Tomcat可能出现的问题"><a href="#Tomcat可能出现的问题" class="headerlink" title="Tomcat可能出现的问题"></a>Tomcat可能出现的问题</h1><hr><pre><code>1. 黑窗口一闪而过：    * 原因： 没有正确配置JAVA_HOME环境变量    * 解决方案：正确配置JAVA_HOME环境变量，并在path中添加%JAVA_HOME%\bin;2. 启动报错：    1. 暴力修改：找到占用的端口号，并且找到对应的进程，杀死该进程        * 命令行输入netstat -ano，查询到端口豪对应进程的PID    2. 温柔修改：修改自身的端口号        * conf/server.xml        * &lt;Connector port=&quot;8888&quot; protocol=&quot;HTTP/1.1&quot;           connectionTimeout=&quot;20000&quot;           redirectPort=&quot;8445&quot; /&gt;        * 一般会将tomcat的默认端口号修改为80。80端口号是http协议的默认端口号。            * 好处：在访问时，就不用输入端口号</code></pre><h1 id="在Tomcat中部署项目的方式"><a href="#在Tomcat中部署项目的方式" class="headerlink" title="在Tomcat中部署项目的方式"></a>在Tomcat中部署项目的方式</h1><hr><pre><code>1. 直接将项目放到webapps目录下即可。    * /WebProject：项目的访问路径--&gt;虚拟目录    * 简化部署：将项目打成一个war包，再将war包放置到webapps目录下。        * war包会自动解压缩2. 配置conf/server.xml文件    在&lt;Host&gt;标签体中配置    &lt;Context docBase=&quot;D:\WebProject&quot; path=&quot;/demo&quot; /&gt;    * docBase:项目存放的路径    * path：虚拟目录3. 在conf\Catalina\localhost创建任意名称的xml文件。在文件中编写    &lt;Context docBase=&quot;D:\WebProject&quot; /&gt;    * 虚拟目录：xml文件的名称4. 在IDE中</code></pre>]]></content>
-      
-      
-      <categories>
-          
-          <category> JavaWeb </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Tomcat </tag>
+            <tag> MySQL </tag>
             
         </tags>
       
@@ -627,6 +517,31 @@
     
     
     <entry>
+      <title>Tomcat问题和项目部署</title>
+      <link href="/2018/08/09/tomcat%E9%85%8D%E7%BD%AE/"/>
+      <url>/2018/08/09/tomcat%E9%85%8D%E7%BD%AE/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Tomcat可能出现的问题"><a href="#Tomcat可能出现的问题" class="headerlink" title="Tomcat可能出现的问题"></a>Tomcat可能出现的问题</h1><hr><pre><code>1. 黑窗口一闪而过：    * 原因： 没有正确配置JAVA_HOME环境变量    * 解决方案：正确配置JAVA_HOME环境变量，并在path中添加%JAVA_HOME%\bin;2. 启动报错：    1. 暴力修改：找到占用的端口号，并且找到对应的进程，杀死该进程        * 命令行输入netstat -ano，查询到端口豪对应进程的PID    2. 温柔修改：修改自身的端口号        * conf/server.xml        * &lt;Connector port=&quot;8888&quot; protocol=&quot;HTTP/1.1&quot;           connectionTimeout=&quot;20000&quot;           redirectPort=&quot;8445&quot; /&gt;        * 一般会将tomcat的默认端口号修改为80。80端口号是http协议的默认端口号。            * 好处：在访问时，就不用输入端口号</code></pre><h1 id="在Tomcat中部署项目的方式"><a href="#在Tomcat中部署项目的方式" class="headerlink" title="在Tomcat中部署项目的方式"></a>在Tomcat中部署项目的方式</h1><hr><pre><code>1. 直接将项目放到webapps目录下即可。    * /WebProject：项目的访问路径--&gt;虚拟目录    * 简化部署：将项目打成一个war包，再将war包放置到webapps目录下。        * war包会自动解压缩2. 配置conf/server.xml文件    在&lt;Host&gt;标签体中配置    &lt;Context docBase=&quot;D:\WebProject&quot; path=&quot;/demo&quot; /&gt;    * docBase:项目存放的路径    * path：虚拟目录3. 在conf\Catalina\localhost创建任意名称的xml文件。在文件中编写    &lt;Context docBase=&quot;D:\WebProject&quot; /&gt;    * 虚拟目录：xml文件的名称4. 在IDE中</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> JavaWeb </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Tomcat </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>初识主键，索引，视图</title>
       <link href="/2018/07/14/%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95%E8%A7%86%E5%9B%BE%E5%88%9D%E8%AF%86/"/>
       <url>/2018/07/14/%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95%E8%A7%86%E5%9B%BE%E5%88%9D%E8%AF%86/</url>
@@ -654,6 +569,37 @@
     
     
     <entry>
+      <title>servlet域对象</title>
+      <link href="/2018/07/05/servlet%E5%9F%9F%E5%AF%B9%E8%B1%A1/"/>
+      <url>/2018/07/05/servlet%E5%9F%9F%E5%AF%B9%E8%B1%A1/</url>
+      
+        <content type="html"><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在学习servlet的过程中，数据共享是必须的操作。总的来说，我们要想共享数据往往是利用<font color="pink" size="3"><strong>多个servlet或对象共同操作的一个对象</strong></font>，这类对象称之为<font color="pink" size="3"><strong>作用域</strong></font>。</p><h2 id="HttpServletRequest"><a href="#HttpServletRequest" class="headerlink" title="HttpServletRequest"></a>HttpServletRequest</h2><p>针对<font color="red" size="3"><strong>一次请求</strong></font>。<br>使用该对象保存数据，一次请求(一个页面，如果是请求转发多个页面)内有效。</p><ul><li>创建：客户端想服务器端发送一次请求</li><li>销毁：服务器响应后销毁</li></ul><h2 id="HttpServletSession"><a href="#HttpServletSession" class="headerlink" title="HttpServletSession"></a>HttpServletSession</h2><p>针对<font color="red" size="3"><strong>一次会话</strong></font>。<br>使用该对象保存数据，一次会话(多次请求)有效。</p><ul><li>创建：请求未携带jsessionid时创建session对象，请求携带jsessionid但找不到对应的session时创建session对象。</li><li>销毁：<pre><code>1. 未正常关闭服务器2. 手动调用了Session的invalidate方法3. session过期了，有效时间默认为30分钟</code></pre></li></ul><h2 id="HttpServletContext"><a href="#HttpServletContext" class="headerlink" title="HttpServletContext"></a>HttpServletContext</h2><p>针对<font color="red" size="3"><strong>一个web应用</strong></font>。<br>一个web应用只有一个ServletContext对象，该对象保存的数据对整个web应用都有效。我们可以把ServletContext与其他对象描绘成水和鱼类的关系。</p><ul><li>创建：服务器启动的时候</li><li>销毁：服务器关闭的时候或者项目移除</li></ul><h3 id="三个作用域对象操作的API"><a href="#三个作用域对象操作的API" class="headerlink" title="三个作用域对象操作的API"></a>三个作用域对象操作的API</h3><p>api都是一样的,完成存取和销毁的操作</p><ul><li>存放数据：setAttribute(name,value)</li><li>获得数据：getAttribute(name)</li><li>删除数据：removeAttribute(name)</li></ul><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>servlet为我们提供的三大域对象来帮助我们实现不同情况下的数据共享,<font color="blue" size="3"><strong>若一个业务功能使用这三个域对象都可以实现,我们一般选用最小的域对象</strong></font>.作用域越小,生命周期越短,在一定程度上可以提供程序的执行效率</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JavaWeb </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> servlet </tag>
+            
+            <tag> request </tag>
+            
+            <tag> session </tag>
+            
+            <tag> ServletContext </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>构造、静态代码块面试题</title>
       <link href="/2018/06/05/%E6%9E%84%E9%80%A0%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%9D%97/"/>
       <url>/2018/06/05/%E6%9E%84%E9%80%A0%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%9D%97/</url>
@@ -673,6 +619,35 @@
             <tag> interview </tag>
             
             <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>${pageContext.request.contextPath}与web.xml问题</title>
+      <link href="/2018/06/01/web_xml%E5%A4%B4%E9%97%AE%E9%A2%98/"/>
+      <url>/2018/06/01/web_xml%E5%A4%B4%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<p>在使用idea中的maven-webapp骨架创建web项目时，我的web.xml文件头默认为</p><pre><code>&lt;!DOCTYPE web-app PUBLIC        &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;        &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;&lt;web-app&gt;</code></pre><p>之初，配置Spring前端控制器，全局参数…等等，<webapp>标签报红，但这并不影响项目的正常运行，因此也没换成</webapp></p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;         version=&quot;2.4&quot;&gt;</code></pre><p>但是，在处理SpringMVC请求去获取集合类型参数时，使用了${pageContext.request.contextPath} 表达式，比如下面</p><pre><code>&lt;script src=&quot;${pageContext.request.contextPath}/js/jquery-3.3.1.js&quot;&gt;&lt;/script&gt;    &lt;script&gt;        var userList = new Array();        userList.push({name:&quot;zhangsan&quot;,age:23});        userList.push({name:&quot;lisi&quot;,age:25});        $.ajax({            type:&quot;post&quot;,            url:&quot;${pageContext.request.contextPath}/user/success9&quot;,            data:JSON.stringify(userList),            contentType:&quot;application/json;charset=utf-8&quot;        });    &lt;/script&gt;</code></pre><p>报错如下</p><p><img src="https://i.loli.net/2019/06/01/5cf264ea37c8462438.png" alt></p><p>？？？难道使我js路径写的有问题？仔细检查并没有，此时idea控制台并没有报错详细信息。</p><p>再打开f12</p><p><img src="https://i.loli.net/2019/06/01/5cf264f4dce5d41472.png" alt></p><p>再把xml文件头改成上面那个，就好了…这里的version应该在2.4以上，因此在使用${pageContext.request.contextPath}表达式时，web.xml的头应该注意版本</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JavaWeb </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Spring </tag>
+            
+            <tag> xml </tag>
+            
+            <tag> SpringMVC </tag>
             
         </tags>
       
@@ -752,6 +727,62 @@
             <tag> interview </tag>
             
             <tag> java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>XML解析</title>
+      <link href="/2018/04/26/XML%E8%A7%A3%E6%9E%90/"/>
+      <url>/2018/04/26/XML%E8%A7%A3%E6%9E%90/</url>
+      
+        <content type="html"><![CDATA[<h1 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h1><hr><p>操作xml文档，将文档的数据读取到内存中。</p><h2 id="解析方式"><a href="#解析方式" class="headerlink" title="解析方式"></a>解析方式</h2><pre><code>DOM 将标记语言文档一次性加载进内存，在内存中形成一棵dom树优点：操作方便，可以对文档进行CRUD的所有操作缺点：占内存SAX 逐行读取，基于事件驱动优点：不占内存，相比DOM效率更高缺点：只能读取，不能增删改</code></pre><h2 id="解析器"><a href="#解析器" class="headerlink" title="解析器"></a>解析器</h2><p>常见解析器</p><pre><code>1. JAXP：sun公司提供的解析器，支持dom和sax两种思想2. DOM4J：一款非常优秀的解析器3. Jsoup：jsoup 是一款Java 的HTML解析器，可直接解析某个URL地址、HTML文本内容。它提供了一套非常省力的API，可通过DOM，CSS以及类似于jQuery的操作方法来取出和操作数据。4. PULL：Android操作系统内置的解析器，sax方式的。</code></pre><h3 id="DOM4J"><a href="#DOM4J" class="headerlink" title="DOM4J"></a>DOM4J</h3><p>本文中利用dom4j和xpath的支持进行解析，DOM4J中还提供了其他几种遍历节点的方法，例如枚举(Iterator)、递归、visitor模式等等。</p><p>范例</p><pre><code>1. 导包    dom4j-1.6.1.jar    jaxen-1.1-beta-6.jar2.     public class TestDemo01 {            @Test            public void method() throws DocumentException {            //创建解析器            SAXReader saxReader = new SAXReader();            //解析xml            Document document = saxReader.read(TestDemo01.class.getClassLoader().getResourceAsStream(&quot;student.xml&quot;));            //获取根标签            Element rootElement = document.getRootElement();            /*System.out.println(rootElement);            //获取子标签            List elements = rootElement.elements();            //获取第一个            Object stu1 = elements.get(0);            System.out.println(stu1);            System.out.println(&quot;----------&quot;);            //student个数            List student = rootElement.elements(&quot;student&quot;);            int size = student.size();            System.out.println(size);            System.out.println(&quot;----------&quot;);            //获取第一个学号            Element stu = rootElement.element(&quot;student&quot;);            String s1 = stu.attributeValue(&quot;number&quot;);            System.out.println(s1);            System.out.println(&quot;----------&quot;);            //获取第一个年龄            Element age1 = stu.element(&quot;age&quot;);            String text = age1.getText();            System.out.println(text);            // 即每一级便签和下一级标签用element方法获取第一个        }    }3. 结合xpath            Element element = (Element)rootElement.selectSingleNode(&quot;//student[@number=&apos;heima_0002&apos;]&quot;);            System.out.println(element);//xpath语法可通过xpath API文档查询</code></pre><h4 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h4><p>在idea中编程时，使用Schema约束会在写xml文件是自动出现 <strong>xmlns=”<a href="http://www.itcast.cn/xml&quot;" target="_blank" rel="noopener">http://www.itcast.cn/xml&quot;</a></strong>，使用这样的xml编码方式再结合xpath进行解析时，会发生找不到结果的问题</p><pre><code>&lt;students xmlns=&quot;http://www.itcast.cn/xml&quot;&gt;    &lt;student number=&quot;heima_0001&quot;&gt;    &lt;name&gt;zhangsan&lt;/name&gt;    &lt;age&gt;24&lt;/age&gt;    &lt;sex&gt;male&lt;/sex&gt;    &lt;/student&gt;&lt;/students&gt;</code></pre><p>如获取</p><pre><code>Element element = (Element)rootElement.selectSingleNode(&quot;//student[@number=&apos;heima_0002&apos;]&quot;);  System.out.println(element);</code></pre><p>结果为<strong>null</strong></p><h3 id="Jsoup"><a href="#Jsoup" class="headerlink" title="Jsoup"></a>Jsoup</h3><p>步骤：</p><pre><code>1. 导入jar包        jsoup-1.11.2.jar        JsoupXpath-0.3.2.jar2. 获取Document对象3. 获取对应的标签Element对象4. 获取数据</code></pre><p>代码：</p><pre><code>//2.1获取student.xml的path  String path = JsoupDemo1.class.getClassLoader().getResource(&quot;student.xml&quot;).getPath();  //2.2解析xml文档，加载文档进内存，获取dom树---&gt;Document  Document document = Jsoup.parse(new File(path), &quot;utf-8&quot;);  //3.获取元素对象 Element  Elements elements = document.getElementsByTag(&quot;name&quot;);  System.out.println(elements.size());  //3.1获取第一个name的Element对象  Element element = elements.get(0);  //3.2获取数据  String name = element.text();  System.out.println(name);</code></pre><p>对象的使用：</p><pre><code>1. Jsoup：工具类，可以解析html或xml文档，返回Document    * parse：解析html或xml文档，返回Document        * parse​(File in, String charsetName)：解析xml或html文件的。        * parse​(String html)：解析xml或html字符串        * parse​(URL url, int timeoutMillis)：通过网络路径获取指定的html或xml的文档对象2. Document：文档对象。代表内存中的dom树    * 获取Element对象        * getElementById​(String id)：根据id属性值获取唯一的element对象        * getElementsByTag​(String tagName)：根据标签名称获取元素对象集合        * getElementsByAttribute​(String key)：根据属性名称获取元素对象集合        * getElementsByAttributeValue​(String key, String value)：根据对应的属性名和属性值获取元素对象集合3. Elements：元素Element对象的集合。可以当做 ArrayList&lt;Element&gt;来使用4. Element：元素对象    1. 获取子元素对象        * getElementById​(String id)：根据id属性值获取唯一的element对象        * getElementsByTag​(String tagName)：根据标签名称获取元素对象集合        * getElementsByAttribute​(String key)：根据属性名称获取元素对象集合        * getElementsByAttributeValue​(String key, String value)：根据对应的属性名和属性值获取元素对象集合    2. 获取属性值        * String attr(String key)：根据属性名称获取属性值    3. 获取文本内容        * String text():获取文本内容        * String html():获取标签体的所有内容(包括字标签的字符串内容)5. Node：节点对象    * 是Document和Element的父类</code></pre><p>快捷查询方式：</p><pre><code>1. selector:选择器    * 使用的方法：Elements    select​(String cssQuery)        * 语法：参考Selector类中定义的语法2. XPath：XPath即为XML路径语言，它是一种用来确定XML（标准通用标记语言的子集）文档中某部分位置的语言    * 使用Jsoup的Xpath需要额外导入jar包。    * 查询w3cshool参考手册，使用xpath的语法完成查询    * 代码：        //1.获取student.xml的path        String path = JsoupDemo6.class.getClassLoader().getResource(&quot;student.xml&quot;).getPath();        //2.获取Document对象        Document document = Jsoup.parse(new File(path), &quot;utf-8&quot;);        //3.根据document对象，创建JXDocument对象        JXDocument jxDocument = new JXDocument(document);        //4.结合xpath语法查询        //4.1查询所有student标签        List&lt;JXNode&gt; jxNodes = jxDocument.selN(&quot;//student&quot;);        for (JXNode jxNode : jxNodes) {            System.out.println(jxNode);        }        System.out.println(&quot;--------------------&quot;);        //4.2查询所有student标签下的name标签        List&lt;JXNode&gt; jxNodes2 = jxDocument.selN(&quot;//student/name&quot;);        for (JXNode jxNode : jxNodes2) {            System.out.println(jxNode);        }        System.out.println(&quot;--------------------&quot;);        //4.3查询student标签下带有id属性的name标签        List&lt;JXNode&gt; jxNodes3 = jxDocument.selN(&quot;//student/name[@id]&quot;);        for (JXNode jxNode : jxNodes3) {            System.out.println(jxNode);        }        System.out.println(&quot;--------------------&quot;);        //4.4查询student标签下带有id属性的name标签 并且id属性值为itcast        List&lt;JXNode&gt; jxNodes4 = jxDocument.selN(&quot;//student/name[@id=&apos;itcast&apos;]&quot;);        for (JXNode jxNode : jxNodes4) {            System.out.println(jxNode);        }</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> JavaWeb </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> xml </tag>
+            
+            <tag> xpath </tag>
+            
+            <tag> DOM4J </tag>
+            
+            <tag> Jsoup </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>XML简介与约束</title>
+      <link href="/2018/04/22/XML%E5%85%A5%E9%97%A8/"/>
+      <url>/2018/04/22/XML%E5%85%A5%E9%97%A8/</url>
+      
+        <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><hr><ul><li><p>XML是可扩展标记语言（Extensible Markup Language），可扩展即标签都是自定义的。</p></li><li><p>功能：存储数据    </p><pre><code>1. 配置文件2. 在网络中传输</code></pre></li><li><p>与HTML的区别</p><pre><code>1. xml标签都是自定义的，html标签是预定义。2. xml的语法严格（严格区分大小写），html语法松散3. xml是存储数据的，html是展示数据</code></pre></li><li><p>各个平台之间的数据传输类型，但现在已经被JSON替换了。XML可以存储简单、小量的数据。</p></li></ul><h1 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h1><hr><h2 id="写法"><a href="#写法" class="headerlink" title="写法"></a>写法</h2><p>注意：</p><ul><li>属性值必须使用引号(单双都可)引起来</li><li>标签名称区分大小写</li></ul><p>示例</p><pre><code>    &lt;?xml version=&apos;1.0&apos; ?&gt;&lt;users&gt;    &lt;user id=&apos;1&apos;&gt;        &lt;name&gt;zhangsan&lt;/name&gt;        &lt;age&gt;23&lt;/age&gt;        &lt;gender&gt;男&lt;/gender&gt;    &lt;/user&gt;    &lt;user id=&apos;2&apos;&gt;        &lt;name&gt;lisi&lt;/name&gt;        &lt;age&gt;25&lt;/age&gt;        &lt;gender&gt;男&lt;/gender&gt;    &lt;/user&gt;&lt;/users&gt;</code></pre><h2 id="组成部分"><a href="#组成部分" class="headerlink" title="组成部分"></a>组成部分</h2><pre><code>1. 文档声明    1. 格式：&lt;?xml 属性列表 ?&gt;    2. 属性列表：        * version：版本号，必须的属性        * encoding：编码方式。告知解析引擎当前文档使用的字符集，默认值：ISO-8859-1        * standalone：是否独立            * 取值：                * yes：不依赖其他文件                * no：依赖其他文件2. 指令(了解)：结合css的    * &lt;?xml-stylesheet type=&quot;text/css&quot; href=&quot;a.css&quot; ?&gt;3. 标签：标签名称自定义的    * 规则：        * 名称可以包含字母、数字以及其他的字符         * 名称不能以数字或者标点符号开始         * 名称不能以字母 xml（或者 XML、Xml 等等）开始         * 名称不能包含空格 4. 属性：    id属性值唯一5. 文本：    * CDATA区：在该区域中的数据会被原样展示        * 格式：  &lt;![CDATA[ 数据 ]]&gt;</code></pre><h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><p>约束为规定XML文档的编写规则。</p><p>第一种约束 <strong>DTD</strong></p><pre><code>外部dtd：将约束的规则定义在外部的dtd文件中                    * 本地：&lt;!DOCTYPE 根标签名 SYSTEM &quot;dtd文件的位置&quot;&gt;                    * 网络：&lt;!DOCTYPE 根标签名 PUBLIC &quot;dtd文件名字&quot; &quot;dtd文件的位置URL&quot;&gt;内部dtd：写在内部</code></pre><p>外部范例</p><pre><code>//student.dtd文件&lt;!ELEMENT students (student+) &gt;&lt;!ELEMENT student (name,age,sex)&gt;&lt;!ELEMENT name (#PCDATA)&gt;&lt;!ELEMENT age (#PCDATA)&gt;&lt;!ELEMENT sex (#PCDATA)&gt;&lt;!ATTLIST student number ID #REQUIRED&gt;//student.xml文件&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;&lt;!DOCTYPE students SYSTEM &quot;student.dtd&quot;&gt;&lt;students&gt;    &lt;student number=&quot;s001&quot;&gt;        &lt;name&gt;zhangsan&lt;/name&gt;        &lt;age&gt;abc&lt;/age&gt;        &lt;sex&gt;hehe&lt;/sex&gt;    &lt;/student&gt;    &lt;student number=&quot;s002&quot;&gt;        &lt;name&gt;lisi&lt;/name&gt;        &lt;age&gt;24&lt;/age&gt;        &lt;sex&gt;female&lt;/sex&gt;    &lt;/student&gt;&lt;/students&gt;</code></pre><p>第二种约束 <strong>Schema</strong></p><p>引入</p><pre><code>    1. 填写xml文档的根元素    2. 引入xsi前缀.  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;    3. 引入xsd文件命名空间.  xsi:schemaLocation=&quot;http://www.itcast.cn/xml  student.xsd&quot;    4. 为每一个xsd约束声明一个前缀,作为标识  xmlns=&quot;http://www.itcast.cn/xml&quot;&lt;students   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;        xmlns=&quot;http://www.itcast.cn/xml&quot;        xsi:schemaLocation=&quot;http://www.itcast.cn/xml  student.xsd&quot;&gt;</code></pre><p>范例</p><p>student.xsd</p><pre><code>&lt;?xml version=&quot;1.0&quot; ?&gt;&lt;xsd:schema xmlns=&quot;http://www.itcast.cn/xml&quot;            xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;            targetNamespace=&quot;http://www.itcast.cn/xml&quot; elementFormDefault=&quot;qualified&quot;&gt;    &lt;xsd:element name=&quot;students&quot; type=&quot;studentsType&quot;/&gt;    &lt;xsd:complexType name=&quot;studentsType&quot;&gt;        &lt;xsd:sequence&gt;            &lt;xsd:element name=&quot;student&quot; type=&quot;studentType&quot; minOccurs=&quot;0&quot; maxOccurs=&quot;unbounded&quot;/&gt;        &lt;/xsd:sequence&gt;    &lt;/xsd:complexType&gt;    &lt;xsd:complexType name=&quot;studentType&quot;&gt;        &lt;xsd:sequence&gt;            &lt;xsd:element name=&quot;name&quot; type=&quot;xsd:string&quot;/&gt;            &lt;xsd:element name=&quot;age&quot; type=&quot;ageType&quot; /&gt;            &lt;xsd:element name=&quot;sex&quot; type=&quot;sexType&quot; /&gt;        &lt;/xsd:sequence&gt;        &lt;xsd:attribute name=&quot;number&quot; type=&quot;numberType&quot; use=&quot;required&quot;/&gt;    &lt;/xsd:complexType&gt;    &lt;xsd:simpleType name=&quot;sexType&quot;&gt;        &lt;xsd:restriction base=&quot;xsd:string&quot;&gt;            &lt;xsd:enumeration value=&quot;male&quot;/&gt;            &lt;xsd:enumeration value=&quot;female&quot;/&gt;        &lt;/xsd:restriction&gt;    &lt;/xsd:simpleType&gt;    &lt;xsd:simpleType name=&quot;ageType&quot;&gt;        &lt;xsd:restriction base=&quot;xsd:integer&quot;&gt;            &lt;xsd:minInclusive value=&quot;0&quot;/&gt;            &lt;xsd:maxInclusive value=&quot;256&quot;/&gt;        &lt;/xsd:restriction&gt;    &lt;/xsd:simpleType&gt;    &lt;xsd:simpleType name=&quot;numberType&quot;&gt;        &lt;xsd:restriction base=&quot;xsd:string&quot;&gt;            &lt;xsd:pattern value=&quot;heima_\d{4}&quot;/&gt;        &lt;/xsd:restriction&gt;    &lt;/xsd:simpleType&gt;&lt;/xsd:schema&gt;</code></pre><p>student.xml</p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;&lt;students   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;            xmlns=&quot;http://www.itcast.cn/xml&quot;            xsi:schemaLocation=&quot;http://www.itcast.cn/xml  student.xsd&quot;&gt;    &lt;student number=&quot;heima_0001&quot;&gt;        &lt;name&gt;tom&lt;/name&gt;        &lt;age&gt;18&lt;/age&gt;        &lt;sex&gt;male&lt;/sex&gt;    &lt;/student&gt;&lt;/students&gt;</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> JavaWeb </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> xml </tag>
             
         </tags>
       
