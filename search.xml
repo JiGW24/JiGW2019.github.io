@@ -30,10 +30,10 @@
     
     <entry>
       <title>消息中间件和RabbitMQ相关备忘</title>
-      <link href="/2019/07/06/%E6%B6%88%E6%81%AF%E5%92%8CRabbitMQ/"/>
-      <url>/2019/07/06/%E6%B6%88%E6%81%AF%E5%92%8CRabbitMQ/</url>
+      <link href="/2019/07/04/%E6%B6%88%E6%81%AF%E5%92%8CRabbitMQ/"/>
+      <url>/2019/07/04/%E6%B6%88%E6%81%AF%E5%92%8CRabbitMQ/</url>
       
-        <content type="html"><![CDATA[<h2 id="消息中间件"><a href="#消息中间件" class="headerlink" title="消息中间件"></a>消息中间件</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>消息中间件（消息队列）是分布式系统中重要的组件，主要解决应用耦合，异步消息，流量削锋等问题实现高性能，高可用，可伸缩和最终一致性[架构]   使用较多的消息队列有ActiveMQ，RabbitMQ，ZeroMQ，Kafka，MetaMQ，RocketMQ</p><p>关于消息中间件的各种面试题：<a href="https://jsbintask.cn/2019/01/28/interview/interview-middleware-jms/" target="_blank" rel="noopener">https://jsbintask.cn/2019/01/28/interview/interview-middleware-jms/</a></p><h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul><li>异步处理</li><li>应用解耦</li><li>流量削锋</li><li>消息通讯<br>这里在网上看到一篇比较具体的<a href="https://www.cnblogs.com/ruiati/p/6649868.html" target="_blank" rel="noopener">博文</a>,有时间自己再写下来。</li></ul><h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><h3 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h3><p>RabbitMQ 是一个由 Erlang 语言开发的 AMQP 的开源实现。</p><blockquote><p>AMQP ：Advanced Message Queue，高级消息队列协议。它是应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制。</p></blockquote><h3 id="主要概念"><a href="#主要概念" class="headerlink" title="主要概念"></a>主要概念</h3><p><strong>RabbitMQ Server：</strong> 也叫broker server，它是一种传输服务。 他的角色就是维护一条从Producer到Consumer的路线，保证数据能够按照指定的方式进行传输。</p><p><strong>Producer：</strong> 消息生产者，如图A、B、C，数据的发送方。消息生产者连接RabbitMQ服务器然后将消息投递到Exchange。</p><p><strong>Consumer：</strong>消息消费者，如图1、2、3，数据的接收方。消息消费者订阅队列，RabbitMQ将Queue中的消息发送到消息消费者。</p><p><strong>Exchange：</strong>生产者将消息发送到Exchange（交换器），由Exchange将消息路由到一个或多个Queue中（或者丢弃）。Exchange并不存储消息。RabbitMQ中的Exchange有direct、fanout、topic、headers四种类型，每种类型对应不同的路由规则。</p><p><strong>Queue：</strong>（队列）是RabbitMQ的内部对象，用于存储消息。消息消费者就是通过订阅队列来获取消息的，RabbitMQ中的消息都只能存储在Queue中，生产者生产消息并最终投递到Queue中，消费者可以从Queue中获取消息并消费。多个消费者可以订阅同一个Queue，这时Queue中的消息会被平均分摊给多个消费者进行处理，而不是每个消费者都收到所有的消息并处理。</p><p><strong>RoutingKey：</strong>生产者在将消息发送给Exchange的时候，一般会指定一个routing key，来指定这个消息的路由规则，而这个routing key需要与Exchange Type及binding key联合使用才能最终生效。在Exchange Type与binding key固定的情况下（在正常使用时一般这些内容都是固定配置好的），我们的生产者就可以在发送消息给Exchange时，通过指定routing key来决定消息流向哪里。RabbitMQ为routing key设定的长度限制为255 bytes。</p><p><strong>Connection： （连接）</strong>：Producer和Consumer都是通过TCP连接到RabbitMQ Server的。以后我们可以看到，程序的起始处就是建立这个TCP连接。</p><p><strong>Channels： （信道）</strong>：它建立在上述的TCP连接中。数据流动都是在Channel中进行的。也就是说，一般情况是程序起始建立TCP连接，第二步就是建立这个Channel。</p><p><strong>VirtualHost：</strong>权限控制的基本单位，一个VirtualHost里面有若干Exchange和MessageQueue，以及指定被哪些user使用</p><h3 id="RabbitMQ发送和接收消息"><a href="#RabbitMQ发送和接收消息" class="headerlink" title="RabbitMQ发送和接收消息"></a>RabbitMQ发送和接收消息</h3><p>这里有三种模式</p><h4 id="直接模式-Direct"><a href="#直接模式-Direct" class="headerlink" title="直接模式 Direct"></a>直接模式 Direct</h4><blockquote><p>我们需要将消息发送给唯一一个节点时使用这种模式</p></blockquote><p><a href="https://i.loli.net/2019/07/13/5d29b6822c16f95212.jpg" target="_blank" rel="noopener">https://i.loli.net/2019/07/13/5d29b6822c16f95212.jpg</a></p><p>任何发送到Direct Exchange的消息都会被转发到RouteKey中指定的Queue。</p><p>1.一般情况可以使用rabbitMQ自带的Exchange：””(该Exchange的名字为空字符串，下文称其为default Exchange)。</p><p>2.这种模式下可以不需要将Exchange进行任何绑定(binding)操作</p><p>3.消息传递时需要一个“RouteKey”，可以简单的理解为要发送到的队列名字。</p><p>4.如果vhost中不存在RouteKey中指定的队列名，则该消息会被抛弃。</p><h4 id="分列模式-Fanout"><a href="#分列模式-Fanout" class="headerlink" title="分列模式 Fanout"></a>分列模式 Fanout</h4><blockquote><p>我们需要将消息一次发给多个队列时需要使用这种模式</p></blockquote><p><a href="https://i.loli.net/2019/07/13/5d29b68598a1e48249.jpg" target="_blank" rel="noopener">https://i.loli.net/2019/07/13/5d29b68598a1e48249.jpg</a></p><p>任何发送到Fanout Exchange的消息都会被转发到与该Exchange绑定(Binding)的所有Queue上。</p><p>1.这种模式需要提前将Exchange与Queue进行绑定，一个Exchange可以绑定多个Queue，一个Queue可以同多个Exchange进行绑定(点击你的exchange—Bindings绑定即可)</p><p>2.这种模式不需要RouteKey</p><p>3.如果接受到消息的Exchange没有与任何Queue绑定，则消息会被抛弃。</p><h4 id="主题模式-Topic"><a href="#主题模式-Topic" class="headerlink" title="主题模式 Topic"></a>主题模式 Topic</h4><p>了解到还有第三种</p><blockquote><p>任何发送到Topic Exchange的消息都会被转发到所有关心RouteKey中指定话题的Queue上</p></blockquote><p><a href="https://i.loli.net/2019/07/13/5d29b713f300e95499.png" target="_blank" rel="noopener">https://i.loli.net/2019/07/13/5d29b713f300e95499.png</a></p>]]></content>
+        <content type="html"><![CDATA[<h2 id="消息中间件"><a href="#消息中间件" class="headerlink" title="消息中间件"></a>消息中间件</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>消息中间件（消息队列）是分布式系统中重要的组件，主要解决应用耦合，异步消息，流量削锋等问题实现高性能，高可用，可伸缩和最终一致性[架构]   使用较多的消息队列有ActiveMQ，RabbitMQ，ZeroMQ，Kafka，MetaMQ，RocketMQ</p><p>关于消息中间件的各种面试题：<a href="https://jsbintask.cn/2019/01/28/interview/interview-middleware-jms/" target="_blank" rel="noopener">https://jsbintask.cn/2019/01/28/interview/interview-middleware-jms/</a></p><h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul><li>异步处理</li><li>应用解耦</li><li>流量削锋</li><li>消息通讯<br>这里在网上看到一篇比较具体的<a href="https://www.cnblogs.com/ruiati/p/6649868.html" target="_blank" rel="noopener">博文</a>,有时间自己再写下来。</li></ul><h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><h3 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h3><p>RabbitMQ 是一个由 Erlang 语言开发的 AMQP 的开源实现。</p><blockquote><p>AMQP ：Advanced Message Queue，高级消息队列协议。它是应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制。</p></blockquote><h3 id="主要概念"><a href="#主要概念" class="headerlink" title="主要概念"></a>主要概念</h3><p><strong>RabbitMQ Server：</strong> 也叫broker server，它是一种传输服务。 他的角色就是维护一条从Producer到Consumer的路线，保证数据能够按照指定的方式进行传输。</p><p><strong>Producer：</strong> 消息生产者，如图A、B、C，数据的发送方。消息生产者连接RabbitMQ服务器然后将消息投递到Exchange。</p><p><strong>Consumer：</strong>消息消费者，如图1、2、3，数据的接收方。消息消费者订阅队列，RabbitMQ将Queue中的消息发送到消息消费者。</p><p><strong>Exchange：</strong>生产者将消息发送到Exchange（交换器），由Exchange将消息路由到一个或多个Queue中（或者丢弃）。Exchange并不存储消息。RabbitMQ中的Exchange有direct、fanout、topic、headers四种类型，每种类型对应不同的路由规则。</p><p><strong>Queue：</strong>（队列）是RabbitMQ的内部对象，用于存储消息。消息消费者就是通过订阅队列来获取消息的，RabbitMQ中的消息都只能存储在Queue中，生产者生产消息并最终投递到Queue中，消费者可以从Queue中获取消息并消费。多个消费者可以订阅同一个Queue，这时Queue中的消息会被平均分摊给多个消费者进行处理，而不是每个消费者都收到所有的消息并处理。</p><p><strong>RoutingKey：</strong>生产者在将消息发送给Exchange的时候，一般会指定一个routing key，来指定这个消息的路由规则，而这个routing key需要与Exchange Type及binding key联合使用才能最终生效。在Exchange Type与binding key固定的情况下（在正常使用时一般这些内容都是固定配置好的），我们的生产者就可以在发送消息给Exchange时，通过指定routing key来决定消息流向哪里。RabbitMQ为routing key设定的长度限制为255 bytes。</p><p><strong>Connection： （连接）</strong>：Producer和Consumer都是通过TCP连接到RabbitMQ Server的。以后我们可以看到，程序的起始处就是建立这个TCP连接。</p><p><strong>Channels： （信道）</strong>：它建立在上述的TCP连接中。数据流动都是在Channel中进行的。也就是说，一般情况是程序起始建立TCP连接，第二步就是建立这个Channel。</p><p><strong>VirtualHost：</strong>权限控制的基本单位，一个VirtualHost里面有若干Exchange和MessageQueue，以及指定被哪些user使用</p><h3 id="RabbitMQ发送和接收消息"><a href="#RabbitMQ发送和接收消息" class="headerlink" title="RabbitMQ发送和接收消息"></a>RabbitMQ发送和接收消息</h3><p>这里有三种模式</p><h4 id="直接模式-Direct"><a href="#直接模式-Direct" class="headerlink" title="直接模式 Direct"></a>直接模式 Direct</h4><blockquote><p>我们需要将消息发送给唯一一个节点时使用这种模式</p></blockquote><p><img src="https://i.loli.net/2019/07/13/5d29b6822c16f95212.jpg" alt></p><p>任何发送到Direct Exchange的消息都会被转发到RouteKey中指定的Queue。</p><p>1.一般情况可以使用rabbitMQ自带的Exchange：””(该Exchange的名字为空字符串，下文称其为default Exchange)。</p><p>2.这种模式下可以不需要将Exchange进行任何绑定(binding)操作</p><p>3.消息传递时需要一个“RouteKey”，可以简单的理解为要发送到的队列名字。</p><p>4.如果vhost中不存在RouteKey中指定的队列名，则该消息会被抛弃。</p><h4 id="分列模式-Fanout"><a href="#分列模式-Fanout" class="headerlink" title="分列模式 Fanout"></a>分列模式 Fanout</h4><blockquote><p>我们需要将消息一次发给多个队列时需要使用这种模式</p></blockquote><p><img src="https://i.loli.net/2019/07/13/5d29b68598a1e48249.jpg" alt></p><p>任何发送到Fanout Exchange的消息都会被转发到与该Exchange绑定(Binding)的所有Queue上。</p><p>1.这种模式需要提前将Exchange与Queue进行绑定，一个Exchange可以绑定多个Queue，一个Queue可以同多个Exchange进行绑定(点击你的exchange—Bindings绑定即可)</p><p>2.这种模式不需要RouteKey</p><p>3.如果接受到消息的Exchange没有与任何Queue绑定，则消息会被抛弃。</p><h4 id="主题模式-Topic"><a href="#主题模式-Topic" class="headerlink" title="主题模式 Topic"></a>主题模式 Topic</h4><p>了解到还有第三种</p><blockquote><p>任何发送到Topic Exchange的消息都会被转发到所有关心RouteKey中指定话题的Queue上</p></blockquote><p><img src="https://i.loli.net/2019/07/13/5d29b713f300e95499.png" alt></p>]]></content>
       
       
       <categories>
@@ -291,6 +291,33 @@
             <tag> druid </tag>
             
             <tag> junit </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>String问题</title>
+      <link href="/2019/05/26/String/"/>
+      <url>/2019/05/26/String/</url>
+      
+        <content type="html"><![CDATA[<p>看到了一题自己不会的String面试题，想想面试官恶心啊，这里把String方面的面试题整理下吧</p><p><strong>持续更新</strong></p><hr><h2 id="记住"><a href="#记住" class="headerlink" title="记住"></a>记住</h2><h3 id="创建字符串方式的区别"><a href="#创建字符串方式的区别" class="headerlink" title="创建字符串方式的区别"></a>创建字符串方式的区别</h3><ul><li><p>常量式创建<br>如 String str1 = “helloworld”;</p><blockquote><p>JVM在实例化字符串时使用了<strong>字符串常量池</strong><br>每当我们创建字符串常量时，JVM会首先检查字符串常量池，如果该字符串已经存在常量池中，那么就直接返回常量池中的实例引用。如果字符串不存在常量池中，就会实例化该字符串并且将其放到常量池中。由于String字符串的不可变性我们可以十分肯定常量池中一定不存在两个相同的字符串。</p></blockquote></li><li><p>对象式创建<br>如 String str2 = new String(“helloworld”);</p><blockquote><p>不存储于字符串池，而是在堆内存中。我们可以调用intern()方法将该字符串对象存储在字符串池，如果字符串池已经有了同样值的字符串，则返回引用。</p></blockquote></li></ul><p>网上有张图片很容易理解<br><img src="https://i.loli.net/2019/07/14/5d2af0ed2279839556.png" alt></p><h3 id="intern-方法"><a href="#intern-方法" class="headerlink" title="intern()方法"></a>intern()方法</h3><p>当intern()方法被调用，如果字符串池中含有一个字符串和当前调用方法的字符串eqauls相等，那么就会返回池中的字符串。如果池中没有的话，则首先将当前字符串加入到池中，然后返回引用。</p><h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="想法"><a href="#想法" class="headerlink" title="想法"></a>想法</h3><p>由于常量池中绝对不存在相同的字符串对象，普通比较就很简单了。<br>其他比较这时看是否 调用intern()方法了。</p><ol><li><p> String s1 = “abc”;<br> //abc存在字符串常量池中，s1地址指向abc常量池的首地址(指针)<br> String s2 = new String(“abc”);<br> //abc存在堆中，s2地址指向我们abc在堆中的首地址<br> String s3 = s2.intern();<br> //intern()作用节省内存的存储空间，会去常量池中的地址给s3,找不到就添加到池中，再返回地址给s3</p><p> System.out.println(s1==s2);<br> System.out.println(s2==s3);<br> System.out.println(s1==s3);</p></li></ol><blockquote><p>答案<br>false/false/true</p></blockquote><ol start="2"><li>下面的代码创建了几个字符串对象<br> String str1 = new String(“helloworld”);<br> String str2 = new String(“helloworld”);</li></ol><blockquote><p>3个对象<br>第一行，字符串池中的”helloworld”对象和堆内存中创建值为”helloworld”新字符串<br>第二行，堆内存中创建值为”helloworld”新字符串，这里字符串池中的”helloworld”重用了</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> JavaSE </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> String </tag>
+            
+            <tag> interview </tag>
             
         </tags>
       
@@ -643,9 +670,9 @@
       
         <tags>
             
-            <tag> java </tag>
-            
             <tag> interview </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
@@ -722,9 +749,9 @@
       
         <tags>
             
-            <tag> java </tag>
-            
             <tag> interview </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
