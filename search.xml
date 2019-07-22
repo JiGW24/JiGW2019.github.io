@@ -160,6 +160,31 @@
     
     
     <entry>
+      <title>Spring使用到的设计模式</title>
+      <link href="/2019/06/19/spring%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2019/06/19/spring%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> 框架 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Spring </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SpringDataRedis实现缓存问题的解决</title>
       <link href="/2019/06/18/SpringDataRedis%E5%A4%87%E5%BF%98/"/>
       <url>/2019/06/18/SpringDataRedis%E5%A4%87%E5%BF%98/</url>
